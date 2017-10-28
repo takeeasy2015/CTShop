@@ -51,10 +51,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 
+$route['product/(:any)'] = 'Product/getProduct/$1';
+
+
+
 $route['hello'] = 'welcome/hello';
 $route['heyman'] = 'welcome/heyman';
-
-
 
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
