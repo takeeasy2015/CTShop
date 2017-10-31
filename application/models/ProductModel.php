@@ -62,8 +62,22 @@
         }
 
 
+        function checkExist($productNum) {
+            $this->db->where('num', $productNum);
+            $result = $this->db->get('ct_product')->row_array();
+            return ($result ? true : false);
+        }
+    
+        function checkStock($productNum, $qty) {
+            $this->db->where('num', $productNum);
+            $result = $this->db->get('ct_product')->row_array();
+            if ($result['safety_stock'] >= $qty) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
+        
     }
-
-
 ?>
