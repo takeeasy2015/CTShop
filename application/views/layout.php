@@ -29,7 +29,7 @@
 <body>
     <div class="container">
         <?php include('header.php'); ?>
-        <?php include($page); ?>
+        <?php include($view); ?>
         <?php include('footer.php')?>
     </div>
 
