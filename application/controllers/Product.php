@@ -17,7 +17,8 @@ class Product extends CI_Controller
         // 頁面資訊
         $view_data = array(
             'title'=> "CTShop",
-            'page'=> 'product/page.php',
+            'path'=> 'product/',
+            'page'=> 'page.php'
         );
         $view_data['cart'] = $this->cart->contents(true);
 
@@ -39,7 +40,8 @@ class Product extends CI_Controller
     {
         $view_data = array(
             'title'=> "CTShop - Product",
-            'page'=> 'product/page.php',
+            'path' => 'product/',
+            'page'=> 'page.php',
         );
 
         $view_data['cart'] = $this->cart->contents(true);
