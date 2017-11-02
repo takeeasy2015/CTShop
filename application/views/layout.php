@@ -12,15 +12,18 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/assets/css/style.css?v201711020638">
+
 
     <!--  JS Important  -->
 
     <!-- [if lt IE 9]>
     <script type="text/javascript" src="assets/js/vendorjquery-1.11.0.min.js" />
     <! [endif] -->
-    <script type="text/javascript" src="http://localhost:8081/CTShop/assets/js/vendor/jquery-2.1.1.min.js" />
-    <script type="text/javascript" src="http://localhost:8081/CTShop/assets/js/vendor/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="http://localhost:8081/CTShop/assets/js/vendor/modernizr-2.6.2.min.js"></script>
+    <script type="text/javascript" src="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/assets/js/vendor/jquery-2.1.1.min.js" />
+    <script type="text/javascript" src="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/assets/js/vendor/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/assets/js/vendor/modernizr-2.6.2.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 
@@ -36,7 +39,7 @@
      <!--  JS Plugin -->
      <script type="text/javascript">
         $(document).ready(function() {
-            
+            console.log(location.host); // test log
         });
     </script>
 </body>

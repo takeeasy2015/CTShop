@@ -65,12 +65,15 @@ class CartApi extends CI_Controller {
         if ($rowid != null && $this->cart->remove($rowid)) {
             $dataResponse['rtnCode'] = 200;
             $dataResponse['rtnMessage'] = '商品移除成功';
+            $dataResponse['rowid'] = $rowid;
         } else {
             $dataResponse['rtnCode'] = 404;
             $dataResponse['rtnMessage'] = '商品移除失敗';
             log_message('info', '商品移除失敗'); // test log
         }
         
+        $dataResponse['itemSize'] = $this->cart->total_items();
+        $dataResponse['itemPriceTotal'] = $this->cart->total() + 60; // test modify 加上運費
         echo json_encode($dataResponse);
      }
 
