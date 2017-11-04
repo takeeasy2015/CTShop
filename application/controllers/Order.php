@@ -7,6 +7,7 @@ class Order extends CI_Controller {
     public function __construct() {
         parent::__construct();
 
+        $this->load->library('ShopConstants');
     }
 
     /**
@@ -21,6 +22,7 @@ class Order extends CI_Controller {
 
         // 取得購物車
         $view_data['cart'] = $this->cart->contents(true);
+        $view_data['shippingFee'] = ShopConstants::SHIPPING_FEE;
 
 
 
@@ -28,12 +30,14 @@ class Order extends CI_Controller {
         $this->load->view("layout", $view_data);
     }
 
-
-    function order_detail($orderId, $phone, $email) {
         
-        
+    function saveOrder() {
+        echo 'into saveOrder function';
     }
 
+    
+    function order_detail($orderId, $phone, $email) {    
+    }
 
 }
 

@@ -63,13 +63,12 @@
 					<tr>
 						<td colspan="4" class="align-middle text-center">運費</td>
 						<td class="align-middle text-center">
-							<strong>$60</strong> <!-- TODO 帶入運費 -->
-						</td>
+							<strong>$<?=$shippingFee;?></strong>
 					</tr>
 					<tr>
 						<td colspan="4" class="align-middle text-center">合計</td>
 						<td class="align-middle text-center cartTotal">
-							<strong><?php echo '$' . ($this->cart->total() + 60); ?></strong>  <!-- TODO 帶入運費 -->
+							<strong><?php echo '$' . ($this->cart->total() + $shippingFee); ?></strong>
 						</td>
 					</tr>
 				<?php } ?>
@@ -78,7 +77,7 @@
 		</div>
 		<!-- ----- 訂購人資料 ----- -->
 		<h5 class="text-center mt-5">訂購人資料</h5>
-		<form action="" id="orderForm">
+		<form action="saveOrder" id="orderForm">
 			<div class="form-row">
 				<div class="form-group col-md-7">
 					<label for="bName">訂購人姓名</label>

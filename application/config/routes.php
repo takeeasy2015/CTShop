@@ -51,10 +51,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 
+// product
 $route['product/(:any)'] = 'Product/getProduct/$1';
 
+// cart
 $route['api/addToCart'] = 'Api/CartApi/addToCart';
 $route['api/removeCartItem'] = 'Api/CartApi/removeCartItem';
+
+// order
+$route['order/saveOrder'] = 'Order/saveOrder';
 
 // trace
 $route['order/checkout'] = 'Order/checkout';
