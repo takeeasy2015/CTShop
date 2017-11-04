@@ -82,7 +82,7 @@
                 <?php } ?>
                 <tr>
                 	<td colspan="4" class="align-middle text-center">合計</td>
-                	<td class="align-middle text-center">
+                	<td class="align-middle text-center productTotal">
                 		<strong>
                 			<?php echo '$' . $this->cart->total(); ?>
                 		</strong>
@@ -156,6 +156,8 @@
                             $(item).remove();
                             if (response.itemSize < 1) {
                                 $('#productCart').find('tbody').html('<tr> <td colspan="5" class="align-middle text-center">目前購物車尚無任何商品</td></tr>');
+                            } else {
+                                $('.productTotal').html('<strong>$' + (response.itemPriceTotal + response.shippingFee) + "</strong>");
                             }
                         }
         			},

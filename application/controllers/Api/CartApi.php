@@ -7,6 +7,8 @@ class CartApi extends CI_Controller {
         parent::__construct();
 
         $this->load->model('ProductModel');
+
+        $this->load->library('ShopConstants');
     }
 
 
@@ -73,7 +75,8 @@ class CartApi extends CI_Controller {
         }
         
         $dataResponse['itemSize'] = $this->cart->total_items();
-        $dataResponse['itemPriceTotal'] = $this->cart->total() + 60; // test modify 加上運費
+        $dataResponse['itemPriceTotal'] = $this->cart->total(); // test modify 加上運費
+        $dataResponse['shippingFee'] = ShopConstants::SHIPPING_FEE;
         echo json_encode($dataResponse);
      }
 

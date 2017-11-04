@@ -63,13 +63,13 @@
 					<tr>
 						<td colspan="4" class="align-middle text-center">運費</td>
 						<td class="align-middle text-center">
-							<strong>$60</strong>
+							<strong>$60</strong> <!-- TODO 帶入運費 -->
 						</td>
 					</tr>
 					<tr>
 						<td colspan="4" class="align-middle text-center">合計</td>
 						<td class="align-middle text-center cartTotal">
-							<strong><?php echo '$' . ($this->cart->total() + 60); ?></strong>
+							<strong><?php echo '$' . ($this->cart->total() + 60); ?></strong>  <!-- TODO 帶入運費 -->
 						</td>
 					</tr>
 				<?php } ?>
@@ -78,7 +78,7 @@
 		</div>
 		<!-- ----- 訂購人資料 ----- -->
 		<h5 class="text-center mt-5">訂購人資料</h5>
-		<form>
+		<form action="" id="orderForm">
 			<div class="form-row">
 				<div class="form-group col-md-7">
 					<label for="bName">訂購人姓名</label>
@@ -279,7 +279,7 @@
                             if (response.itemSize < 1) {
                                 $('#orderProductCart').find('tbody').html('<tr> <td colspan="5" class="align-middle text-center">目前購物車尚無任何商品</td></tr>');
                             } else {
-								$('.cartTotal').html('<strong>$' + response.itemPriceTotal + "</strong>");
+								$('.cartTotal').html('<strong>$' + (response.itemPriceTotal + response.shippingFee) + "</strong>");
 							}
                         }
         			},
@@ -289,4 +289,9 @@
         		});
         	});
         }
+
+
+		
+
+
     </script>
