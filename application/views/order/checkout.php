@@ -77,7 +77,7 @@
 		</div>
 		<!-- ----- 訂購人資料 ----- -->
 		<h5 class="text-center mt-5">訂購人資料</h5>
-		<form action="saveOrder" id="orderForm">
+		<form action="saveOrder" id="orderForm" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-7">
 					<label for="bName">訂購人姓名</label>
@@ -89,7 +89,7 @@
 				</div>
 				<div class="form-group col-md-6">
 					<label for="bEmail">Email</label>
-					<input type="email" class="form-control" id="bEmail" placeholder="service@ct.org.tw">
+					<input type="email" class="form-control" id="bEmail" name="bEmail" placeholder="service@ct.org.tw">
 				</div>
 			</div>
 			<!-- 聯絡手機 -->
@@ -137,6 +137,7 @@
 						<option value="100">中正區</option>
 						<option value="106">大安區</option>
 					</select>
+					<input type="hidden" id="bZipCode" name="bZipCode">
 				</div>
 			</div>
 			<div class="form-group">
@@ -149,7 +150,7 @@
 			<div class="form-group">
 				<div class="form-check">
 					<label class="form-check-label">
-						<input class="form-check-input" type="checkbox"> 同訂購人資料
+						<input type="checkbox" class="form-check-input" name="chooseConInfo"> 同訂購人資料
 					</label>
 				</div>
 			</div>
@@ -165,12 +166,12 @@
 			<label>聯絡手機</label>
 			<div class="form-row mb-2">
 				<div class="form-group col-sm-3">
-					<input type="text" class="form-control" id="cPhoneArea" name="cTelArea" maxlength="4" placeholder="">
+					<input type="text" class="form-control" id="cPhoneArea" name="cPhoneArea" maxlength="4" placeholder="">
 					<span class="placeholder-block">手機前4碼</span>
 				</div>
 				
 				<div class="form-group col-sm-6">
-					<input type="text" class="form-control" id="cPhone" name="cTel" maxlength="6" placeholder="">
+					<input type="text" class="form-control" id="cPhone" name="cPhone" maxlength="6" placeholder="">
 					<span class="placeholder-block">手機後6碼</span>
 				</div>
 			</div>
@@ -207,6 +208,7 @@
 						<option value="100">中正區</option>
 						<option value="106">大安區</option>
 					</select>
+					<input type="hidden" id="cZipCode" name="cZipCode">
 				</div>
 			</div>
 			<div class="form-group">
@@ -215,7 +217,8 @@
 			</div>			
 
 			
-			<button type="submit" class="btn btn-primary mt-5">下一步</button>
+			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
+			<input type="hidden" name="rule" value="saveorder">
 		</form> 
 	</div>
 </div>
@@ -228,6 +231,7 @@
  <script type="text/javascript">
         $(document).ready(function() {
             removeCartItem();
+			testInfo(); // test modify
         });
 
         // function removeCartItem() {
@@ -278,7 +282,8 @@
                             if (response.itemSize < 1) {
                                 $('#orderProductCart').find('tbody').html('<tr> <td colspan="5" class="align-middle text-center">目前購物車尚無任何商品</td></tr>');
                             } else {
-								$('.cartTotal').html('<strong>$' + (response.itemPriceTotal + response.shippingFee) + "</strong>");
+								var totalPrice = response.itemPriceTotal + response.shippingFee;
+								$('.cartTotal').html('<strong>$' + total + "</strong>");
 							}
                         }
         			},
@@ -290,6 +295,26 @@
         }
 
 
+		function testInfo() {  // test modify
+			$("#bName").val("阿巴");
+			$("#bIdNumber").val("A123456789");
+			$("#bEmail").val("abc@cc.oo");
+			$("#bTelArea").val("02");
+			$("#bTel").val("1234567");
+			$("#bTelExt").val("101");
+			$("#bPhoneArea").val("0911");
+			$("#bPhone").val("123456");
+			$("#bZipCode").val("110");
+			$("#bAddress").val("測試路");
+
+			$("#cName").val("小美");
+			$("#cTelArea").val("02");
+			$("#cTel").val("1010107");
+			$("#cPhoneArea").val("0910");
+			$("#cPhone").val("123456");
+			$("#cZipCode").val("110");
+			$("#cAddress").val("測試路");
+		}
 		
 
 

@@ -63,6 +63,7 @@ $route['order/saveOrder'] = 'Order/saveOrder';
 
 // trace
 $route['order/checkout'] = 'Order/checkout';
+$route['order/genNumber'] = 'order/testgenNumber';
 
 $route['hello'] = 'welcome/hello';
 $route['heyman'] = 'welcome/heyman';
