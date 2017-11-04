@@ -23,13 +23,13 @@
 <div class="row justify-content-center mt-5">
 	<div class="col-md-8">
 		<div class="card">
-			<div class="card-header" role="tab" id="headingOne">
-				<a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			<div class="card-header" role="tab" id="headingOrderProductCart">
+				<a data-toggle="collapse" href="#orderProductCart" aria-expanded="true" aria-controls="orderProductCart">
 					顯示訂購商品
 				</a>
 			</div>
 		</div>
-		<div id="orderProductCart" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+		<div id="orderProductCart" class="collapse show" role="tabpanel" aria-labelledby="headingOrderProductCart" data-parent="#accordion">
 			<table class="table table-sm">
 				<thead>
 				      <tr>
@@ -45,8 +45,8 @@
 					<tr>
 						<td colspan="5" class="align-middle text-center">目前購物車尚無任何商品</td>
 					</tr>
-				<?php } else { 
-					 foreach ($cart as $key => $value) {?>
+				<?php } else { ?>
+					<?php foreach ($cart as $key => $value):?>
 					<tr id="<?=$value['rowid']; ?>">
 					    <td class="align-middle text-center">
 							<button class="btn btn-outline-secondary btnOrderItemCartRemove">移除</button>
@@ -59,7 +59,7 @@
 						<td class="align-middle text-center"><?=$value['qty']; ?></td>
 						<td class="align-middle text-center"> $<?=$value['price']; ?></td>
 					</tr>
-					 <?php } ?>
+					<?php endforeach; ?>
 					<tr>
 						<td colspan="4" class="align-middle text-center">運費</td>
 						<td class="align-middle text-center">

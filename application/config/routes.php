@@ -55,8 +55,9 @@ $route['product/(:any)'] = 'Product/getProduct/$1';
 
 $route['api/addToCart'] = 'Api/CartApi/addToCart';
 $route['api/removeCartItem'] = 'Api/CartApi/removeCartItem';
-$route['order/checkout'] = 'Order/checkout';
 
+// trace
+$route['order/checkout'] = 'Order/checkout';
 
 $route['hello'] = 'welcome/hello';
 $route['heyman'] = 'welcome/heyman';

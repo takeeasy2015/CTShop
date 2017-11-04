@@ -55,8 +55,8 @@
                 <tr>
                 	<td colspan="5" class="align-middle text-center">目前購物車尚無任何商品</td>
                 </tr>
-                <?php } else { 
-                	 foreach ($cart as $key => $value) {?>
+                <?php } else { ?>
+                    <?php foreach ($cart as $key => $value):?>
                 <tr id="<?=$value['rowid']; ?>">
                 	<td class="align-middle text-center">
                 		<button class="btn btn-outline-secondary btnItemCartRemove">移除</button>
@@ -79,7 +79,7 @@
                 		<?=$value['price']; ?>
                 	</td>
                 </tr>
-                <?php } ?>
+                <?php endforeach; ?>
                 <tr>
                 	<td colspan="4" class="align-middle text-center">合計</td>
                 	<td class="align-middle text-center productTotal">
