@@ -220,6 +220,7 @@
 			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
 			<input type="hidden" name="rule" value="saveorder">
 		</form> 
+		<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a>
 	</div>
 </div>
 

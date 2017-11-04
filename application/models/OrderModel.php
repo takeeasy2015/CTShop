@@ -36,7 +36,20 @@ class OrderModel extends CI_Model {
     }
     
     
+    function getOrder($orderId) {
+        $this->db->where('id', $orderId);
+        log_message('debug', '取得訂單, orderId:' . $orderId); // test log
+        
+        return $this->db->get('ct_order')->row_array();
+    }
 
+
+    function getOrderDetail($orderId) {
+        $this->db->where('order_id', $orderId);
+        log_message('debug', '取得訂單明細, orderId:' . $orderId); // test log
+        
+        return $this->db->get('ct_order_detail')->row_array();
+    }
 }
 
 

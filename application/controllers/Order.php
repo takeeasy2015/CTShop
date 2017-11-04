@@ -35,10 +35,17 @@ class Order extends CI_Controller {
     function saveOrder() {
         $view_data = array(
             'title' => 'CTShop - SaveOrder',
-            'view' => 'order/finish.php'
+            'view' => 'order/forpay.php'
         );
 
-        if ($this->input->post('rule') == 'saveorder') {
+        // 取得購物車
+        $cart = $this->cart->contents(true);
+        if (sizeof($cart) == 0) {
+            $url = 'http://' . $_SERVER['HTTP_HOST'] . '/CTShop/order/checkout';
+            log_message('info', 'redirect url: ' . $url); // test log
+            redirect($url, 'refresh');
+
+        } else if ($this->input->post('rule') == 'saveorder') {
             $bName =  $this->input->post('bName');
             $bIdNumber = $this->input->post('bIdNumber');
             $bIdNumber = $this->input->post('bIdNumber');
@@ -97,8 +104,7 @@ class Order extends CI_Controller {
             $orderDataArray['id_uni'] = sha1($orderDataArray['id']);
 
 
-            // 取得購物車
-            $cart = $this->cart->contents(true);
+            // 訂單明細
             foreach($cart as $key => $value) {
                 $orderDetailArray[$key]['id'] = uniqid();
                 $orderDetailArray[$key]['order_id'] = $orderDataArray['id'];
