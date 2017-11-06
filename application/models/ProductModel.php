@@ -31,7 +31,7 @@
         */
 
         // 取得特定商品
-        function getProduct($productNum) {
+        function selProduct($productNum) {
             $this->db->where('num', $productNum);
             log_message('debug', '取得商品, productNum:' . $productNum); // test log
             

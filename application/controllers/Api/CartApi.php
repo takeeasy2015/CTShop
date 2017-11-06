@@ -7,6 +7,8 @@ class CartApi extends CI_Controller {
         parent::__construct();
 
         $this->load->model('ProductModel');
+
+        $this->load->library('ShopConstants');
     }
 
 
@@ -27,7 +29,7 @@ class CartApi extends CI_Controller {
             $dataResponse['rtnMessage'] = '商品目前已無庫存';
             log_message('info', '商品無庫存'); // test log
          } else {
-             $product = $this->ProductModel->getProduct($productNum);
+             $product = $this->ProductModel->selProduct($productNum);
              
              log_message('info', 
                 'productName: ' . $product['title'] . 
@@ -65,12 +67,16 @@ class CartApi extends CI_Controller {
         if ($rowid != null && $this->cart->remove($rowid)) {
             $dataResponse['rtnCode'] = 200;
             $dataResponse['rtnMessage'] = '商品移除成功';
+            $dataResponse['rowid'] = $rowid;
         } else {
             $dataResponse['rtnCode'] = 404;
             $dataResponse['rtnMessage'] = '商品移除失敗';
             log_message('info', '商品移除失敗'); // test log
         }
         
+        $dataResponse['itemSize'] = $this->cart->total_items();
+        $dataResponse['itemPriceTotal'] = $this->cart->total(); // test modify 加上運費
+        $dataResponse['shippingFee'] = ShopConstants::SHIPPING_FEE;
         echo json_encode($dataResponse);
      }
 
