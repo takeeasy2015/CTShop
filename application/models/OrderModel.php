@@ -36,7 +36,7 @@ class OrderModel extends CI_Model {
     }
     
     
-    function getOrder($orderId) {
+    function selOrder($orderId) {
         $this->db->where('id', $orderId);
         log_message('debug', '取得訂單, orderId:' . $orderId); // test log
         
@@ -44,7 +44,7 @@ class OrderModel extends CI_Model {
     }
 
 
-    function getOrderDetail($orderId) {
+    function selOrderDetail($orderId) {
         $this->db->where('order_id', $orderId);
         log_message('debug', '取得訂單明細, orderId:' . $orderId); // test log
         

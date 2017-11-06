@@ -34,18 +34,18 @@ class Order extends CI_Controller {
         
     function saveOrder() {
         $view_data = array(
-            'title' => 'CTShop - SaveOrder',
+            'title' => 'CTShop - Order Save',
             'view' => 'order/forpay.php'
         );
 
         // 取得購物車
         $cart = $this->cart->contents(true);
         if (sizeof($cart) == 0) {
-            $url = 'http://' . $_SERVER['HTTP_HOST'] . '/CTShop/order/checkout';
+            $url = 'http://' . $_SERVER['HTTP_HOST'] . '/CTShop/checkout';
             log_message('info', 'redirect url: ' . $url); // test log
             redirect($url, 'refresh');
 
-        } else if ($this->input->post('rule') == 'saveorder') {
+        } else if ($this->input->post('rule') == 'ordersave') {
             $bName =  $this->input->post('bName');
             $bIdNumber = $this->input->post('bIdNumber');
             $bIdNumber = $this->input->post('bIdNumber');
@@ -145,6 +145,28 @@ class Order extends CI_Controller {
         return $this->cart->total() + ShopConstants::SHIPPING_FEE;
     }
     
+    function completeOrder($cordId) {
+        $view_data = array(
+            'title' => 'CTShop - Order Complete',
+            'view' => 'order/complete.php'
+        );
+
+        log_message('info', 'cordId: ' . $cordId); // test log
+        if (sizeof($cordId) < 14) {
+            $view_data['errorMsg'] = '找不到訂單編號';
+            // 顯示頁面
+            $this->load->view("layout", $view_data);
+            return;
+        }
+
+        $order = $this->OrderModel->selOrder((string) $cordId);
+        $orderDetail = $this->OrderModel->selOrderDetail((string) $cordId);
+
+        $view_data['errorMsg'] = '有訂單';
+
+        $this->load->view("layout", $view_data);
+    }
+
     function order_detail($orderId, $phone, $email) {    
     }
 

@@ -44,5 +44,5 @@
         </div>
     </div>
     <a class="btn btn-outline-success" href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1">回到商品頁</a>
-    
+    <?php echo $errorMsg; ?>
 </div>

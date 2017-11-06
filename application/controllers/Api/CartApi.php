@@ -29,7 +29,7 @@ class CartApi extends CI_Controller {
             $dataResponse['rtnMessage'] = '商品目前已無庫存';
             log_message('info', '商品無庫存'); // test log
          } else {
-             $product = $this->ProductModel->getProduct($productNum);
+             $product = $this->ProductModel->selProduct($productNum);
              
              log_message('info', 
                 'productName: ' . $product['title'] . 

@@ -32,7 +32,7 @@
             </li>
         </ul>
         <button class="btnAddToCart btn btn-primary">加入購物車</button>
-        <a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/order/checkout"><button class="btn btn-danger">商品結帳</button></a>
+        <a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/checkout"><button class="btn btn-danger">商品結帳</button></a>
     </div>
     <hr>
 

@@ -77,7 +77,7 @@
 		</div>
 		<!-- ----- 訂購人資料 ----- -->
 		<h5 class="text-center mt-5">訂購人資料</h5>
-		<form action="saveOrder" id="orderForm" method="post">
+		<form action="orderSave" id="orderForm" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-7">
 					<label for="bName">訂購人姓名</label>
@@ -218,7 +218,7 @@
 
 			
 			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
-			<input type="hidden" name="rule" value="saveorder">
+			<input type="hidden" name="rule" value="ordersave">
 		</form> 
 		<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a>
 	</div>
