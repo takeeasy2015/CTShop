@@ -60,7 +60,7 @@ class Product extends CI_Controller
             }
         }
 
-        $view_data['product'] = $this->ProductModel->getProduct($productNum);
+        $view_data['product'] = $this->ProductModel->selProduct($productNum);
 
         if ($view_data['product'] == null) {
             log_message('debug', 'product ' . $productNum . ' is empty.');   // test log

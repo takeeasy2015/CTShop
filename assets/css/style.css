@@ -1,0 +1,14 @@
+
+
+/* Order Checkout */
+
+.alert-rounded {
+    border-radius: 50px;
+}
+
+.placeholder-block {
+    font-size: 12px;
+    display: block;
+    margin-top: 2px;
+    color: #9e9d9d;
+}
