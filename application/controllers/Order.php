@@ -44,10 +44,9 @@ class Order extends CI_Controller {
             $url = 'http://' . $_SERVER['HTTP_HOST'] . '/CTShop/checkout';
             log_message('info', 'redirect url: ' . $url); // test log
             redirect($url, 'refresh');
-
+  
         } else if ($this->input->post('rule') == 'ordersave') {
             $bName =  $this->input->post('bName');
-            $bIdNumber = $this->input->post('bIdNumber');
             $bIdNumber = $this->input->post('bIdNumber');
             $bEmail =  $this->input->post('bEmail');
             $bPhoneArea = $this->input->post('bPhoneArea');
@@ -81,7 +80,7 @@ class Order extends CI_Controller {
                 'buyer_name' => $bName,
                 'buyer_idcard' => $bIdNumber,
                 'buyer_email' => $bEmail,
-                'buyer_tel' => $bTelArea . "-" . $bTel . ($bTelExt == null || $bTelExt == '' ? "" : $bTelExt),
+                'buyer_tel' => $bTelArea . "-" . $bTel . ($bTelExt == null || $bTelExt == '' ? "" : '-' . $bTelExt),
                 'buyer_phone' => $bPhoneArea . "-" . $bPhone,
                 'buyer_city' => $bCity,
                 'buyer_zipcode' => $bZipCode,
@@ -89,7 +88,7 @@ class Order extends CI_Controller {
                 'buyer_remark' => '',
                 'remark' => '',
                 'receiver_name' => $cName,
-                'receiver_tel' => $cTelArea . "-" . $cTel . ($cTelExt == null || $cTelExt == '' ? "" : $cTelExt),
+                'receiver_tel' => $cTelArea . "-" . $cTel . ($cTelExt == null || $cTelExt == '' ? "" : '-' . $cTelExt),
                 'receiver_phone' => $cPhoneArea . "-" . $cPhone,
                 'receiver_city' => $bCity,
                 'receiver_zipcode' => $bZipCode,
@@ -122,6 +121,7 @@ class Order extends CI_Controller {
             $view_data['orderDataArray'] = $orderDataArray;
 
         } else {
+            //  (rule != ordersave) , 則顯示errorMsg
             $view_data['errorMsg'] = '系統異常';
         }  
 
