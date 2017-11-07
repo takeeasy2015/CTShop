@@ -109,7 +109,7 @@
 			<label>聯絡電話</label>
 			<div class="form-row mb-2">
 				<div class="form-group col-sm-3">
-					<input type="text" class="form-control" id="bTelArea" name="bTelArea" maxlength="4" placeholder="">
+					<input type="text" class="form-control" id="bTelArea" name="bTelArea" maxlength="2" placeholder="">
 					<span class="placeholder-block">區碼</span>
 				</div>
 				
@@ -150,71 +150,73 @@
 			<div class="form-group">
 				<div class="form-check">
 					<label class="form-check-label">
-						<input type="checkbox" class="form-check-input" name="chooseConInfo"> 同訂購人資料
+						<input type="checkbox" class="form-check-input" name="buyerIsReceiver"> 同訂購人資料
 					</label>
 				</div>
 			</div>
-			
-			<div class="form-row">
-				<div class="form-group col-md-7">
-					<label for="inputName">收件人姓名</label>
-					<input type="text" class="form-control" id="cName" name="cName" placeholder="收件人姓名">
-				</div>
-			</div>
 
-			<!-- 聯絡手機 -->
-			<label>聯絡手機</label>
-			<div class="form-row mb-2">
-				<div class="form-group col-sm-3">
-					<input type="text" class="form-control" id="cPhoneArea" name="cPhoneArea" maxlength="4" placeholder="">
-					<span class="placeholder-block">手機前4碼</span>
+			<div class="receiverBlock">
+				<div class="form-row">
+					<div class="form-group col-md-7">
+						<label for="inputName">收件人姓名</label>
+						<input type="text" class="form-control" id="cName" name="cName" placeholder="收件人姓名">
+					</div>
 				</div>
-				
-				<div class="form-group col-sm-6">
-					<input type="text" class="form-control" id="cPhone" name="cPhone" maxlength="6" placeholder="">
-					<span class="placeholder-block">手機後6碼</span>
-				</div>
-			</div>
 
-			<!-- 聯絡電話 -->
-			<label>聯絡電話</label>
-			<div class="form-row mb-2">
-				<div class="form-group col-sm-3">
-					<input type="text" class="form-control" id="cTelArea" name="cTelArea" maxlength="4" placeholder="">
-					<span class="placeholder-block">區碼</span>
-				</div>
-				
-				<div class="form-group col-sm-6">
-					<input type="text" class="form-control" id="cTel" name="cTel" maxlength="10" placeholder="">
-					<span class="placeholder-block">電話號碼</span>
-				</div>
-				<div class="form-group col-sm-3">
-					<input type="text" class="form-control" id="cTelExt" name="cTelExt" maxlength="4" placeholder="">
-					<span class="placeholder-block">分機</span>
-				</div>
-			</div>
+				<!-- 聯絡手機 -->
+				<label>聯絡手機</label>
+				<div class="form-row mb-2">
+					<div class="form-group col-sm-3">
+						<input type="text" class="form-control" id="cPhoneArea" name="cPhoneArea" maxlength="4" placeholder="">
+						<span class="placeholder-block">手機前4碼</span>
+					</div>
 
-			<!-- 聯絡地址 -->
-			<div class="form-row">
-				<div class="form-group col-md-4">
-					<label for="inputCity">縣市</label>
-					<select class="form-control" id="cCity" name="cCity">
-						<option value="1">台北市</option>
-					</select>
+					<div class="form-group col-sm-6">
+						<input type="text" class="form-control" id="cPhone" name="cPhone" maxlength="6" placeholder="">
+						<span class="placeholder-block">手機後6碼</span>
+					</div>
 				</div>
-				<div class="form-group col-md-5">
-					<label for="inputCityArea">鄉鎮市區</label>
-					<select class="form-control" id="cCityArea" name="cCityArea">
-						<option value="100">中正區</option>
-						<option value="106">大安區</option>
-					</select>
-					<input type="hidden" id="cZipCode" name="cZipCode">
+
+				<!-- 聯絡電話 -->
+				<label>聯絡電話</label>
+				<div class="form-row mb-2">
+					<div class="form-group col-sm-3">
+						<input type="text" class="form-control" id="cTelArea" name="cTelArea" maxlength="2" placeholder="">
+						<span class="placeholder-block">區碼</span>
+					</div>
+
+					<div class="form-group col-sm-6">
+						<input type="text" class="form-control" id="cTel" name="cTel" maxlength="10" placeholder="">
+						<span class="placeholder-block">電話號碼</span>
+					</div>
+					<div class="form-group col-sm-3">
+						<input type="text" class="form-control" id="cTelExt" name="cTelExt" maxlength="4" placeholder="">
+						<span class="placeholder-block">分機</span>
+					</div>
+				</div>
+
+				<!-- 聯絡地址 -->
+				<div class="form-row">
+					<div class="form-group col-md-4">
+						<label for="inputCity">縣市</label>
+						<select class="form-control" id="cCity" name="cCity">
+							<option value="1">台北市</option>
+						</select>
+					</div>
+					<div class="form-group col-md-5">
+						<label for="inputCityArea">鄉鎮市區</label>
+						<select class="form-control" id="cCityArea" name="cCityArea">
+							<option value="100">中正區</option>
+							<option value="106">大安區</option>
+						</select>
+						<input type="hidden" id="cZipCode" name="cZipCode">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inputAddress">地址</label>
+					<input type="text" class="form-control" id="cAddress" name="cAddress" placeholder="幸福路330號">
 				</div>
 			</div>
-			<div class="form-group">
-				<label for="inputAddress">地址</label>
-				<input type="text" class="form-control" id="cAddress" name="cAddress" placeholder="幸福路330號">
-			</div>			
 
 			
 			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
@@ -229,10 +231,16 @@
 </div>
 
  <!--  JS Plugin -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_zh_TW.min.js"></script>
+
  <script type="text/javascript">
         $(document).ready(function() {
             removeCartItem();
 			testInfo(); // test modify
+			checkBuyerIsReceiver();
+			validateForm();
         });
 
         // function removeCartItem() {
@@ -311,6 +319,7 @@
 			$("#cName").val("小美");
 			$("#cTelArea").val("02");
 			$("#cTel").val("1010107");
+			$("#cTelExt").val("");
 			$("#cPhoneArea").val("0910");
 			$("#cPhone").val("123456");
 			$("#cZipCode").val("110");
@@ -318,5 +327,180 @@
 		}
 		
 
+		function checkBuyerIsReceiver() {
+			$('input[name=buyerIsReceiver]').change(function(){
+				if ($(this).prop("checked")) {
+					$("#cName").val($("#bName").val());
+					$("#cTelArea").val($("#bTelArea").val());
+					$("#cTel").val($("#bTel").val());
+					$("#cTelExt").val($("#bTelExt").val());
+					$("#cPhoneArea").val($("#bPhoneArea").val());
+					$("#cPhone").val($("#bPhone").val());
+					$("#cZipCode").val($("#bZipCode").val());
+					$("#cAddress").val($("#bAddress").val());
+					$('.receiverBlock').css('display', 'none');
+				} else {
+					$('.receiverBlock').css('display', 'inline');
+				}
+
+			});
+		}
+
+
+		function validateForm() {
+			$('#orderForm').validate({
+				rules: {
+					bName: {
+						required: true,
+						minlength: 2
+					},
+					cName: {
+						required: true,
+						minlength: 2
+					},
+					bIdNumber: {
+						required: true,
+						minlength: 10
+					},
+					bEmail: {
+						required: true,
+						email: true
+					},
+					bTelArea: {
+						number: true,
+						maxlength: 4
+					},
+					cTelArea: {
+						number: true,
+						maxlength: 4
+
+					},
+					bTel: {
+						number: true,
+						maxlength: 10
+					}, 
+					cTel: {
+						number: true,
+						maxlength: 10
+					}, 
+					bTelExt: {
+						number: true,
+						maxlength: 4
+					},
+					cTelExt: {
+						number: true,
+						maxlength: 4
+					}, 
+					bPhoneArea: {
+						required: true,
+						number: true,
+						minlength: 4,
+						maxlength: 4,
+					}, 
+					cPhoneArea: {
+						required: true,
+						number: true,
+						minlength: 4,
+						maxlength: 4
+					},
+					bPhone: {
+						required: true,
+						number: true,
+						minlength: 6,
+						maxlength: 10
+						
+					},
+					cPhone: {
+						required: true,
+						number: true,
+						minlength: 6,
+						maxlength: 10
+					},
+					bAddress: {
+						required: true,
+						minlength:5
+					},
+					cAddress: {
+						required: true,
+						minlength:5
+					}
+				},
+				message: {
+					bName: {
+						required: "請輸入姓名",
+						minlength: "姓名至少為2個字母組成"
+					},
+					cName: {
+						required: "請輸入姓名",
+						minlength: "姓名至少為2個字母組成"
+					},
+					bIdNumber: {
+						required: "請輸入身份證字號",
+						minlength: "身分證字號長度不可小於10個字母"
+					},
+					bEmail: {
+						required: "請輸入電子郵件信箱",
+						email: "請輸入一個有效的電子郵件信箱"
+					},
+					bTelArea: {
+						number: "電話區碼必須為數字",
+						maxlength: "區碼至多為2碼"
+					},
+					cTelArea: {
+						number: "電話號碼必須為數字",
+						maxlength: "區碼至多為2碼"
+
+					},
+					bTel: {
+						number: "電話號碼必須為數字",
+						maxlength: "號碼至多為10碼"
+					}, 
+					cTel: {
+						number: "電話號碼必須為數字",
+						maxlength: "號碼至多為10碼"
+					}, 
+					bTelExt: {
+						number: "分機號碼必須為數字",
+						maxlength: "號碼至多為4碼"
+					},
+					cTelExt: {
+						number: "分機號碼必須為數字",
+						maxlength: "號碼至多為4碼"
+					}, 
+					bPhoneArea: {
+						required: "請輸入手機前四碼",
+						number: "手機前四碼必須為數字",
+						minlength: "號碼至少為4碼", 
+						maxlength: "號碼至多為4碼"
+					}, 
+					cPhoneArea: {
+						required: "請輸入手機前四碼",
+						number: "手機前四碼必須為數字",
+						minlength: "號碼至少為4碼", 
+						maxlength: "號碼至多為4碼"
+					},
+					bPhone: {
+						required: "請輸入手機後六碼",
+						number: "手機後六碼必須為數字",
+						minlength: "號碼至少為6碼", 
+						maxlength: "號碼至少為6碼"
+					},
+					cPhone: {
+						required: "請輸入手機後六碼",
+						number: "手機後六碼必須為數字",
+						minlength: "號碼至少為6碼", 
+						maxlength: "號碼至少為6碼"
+					},
+					bAddress: {
+						required: "請輸入訂購人地址",
+						minlength: "請輸入有效的地址"
+					},
+					cAddress: {
+						required: "請輸入收件人地址",
+						minlength: "請輸入有效的地址"
+					}
+				}
+			})
+		}
 
     </script>
