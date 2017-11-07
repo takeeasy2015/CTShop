@@ -12,14 +12,18 @@ class OrderModel extends CI_Model {
         
         $this->db->trans_begin();
         
-        if ($this->db->insert('ct_order', $orderDataArray)) {
-            log_message('info', '準備新增orderdetail, orderid:' . $orderDataArray['id']);
-            foreach ($orderDetailArray as $key => $value) {
-                $this->db->insert('ct_order_detail', $value);
-                log_message('info', '新增orderdetail, orderDetailId:' . $value['id']);
-            }
-        } else {
+        if ($this->insOrder($orderDataArray) < 0) {
             log_message('info', '新增訂單失敗, orderid:' . $orderDataArray['id']);
+            $this->db->trans_rollback();
+            return false;
+        }
+        
+        log_message('info', '準備新增orderdetail, orderid:' . $orderDataArray['id']);
+        
+        if ($this->insOrderDetail($orderDetailArray) < 0) {
+            log_message('info', '新增訂單明細失敗, orderid:' . $orderDetailArray['order_id']['id']);
+            $this->db->trans_rollback();
+            return false;
         }
 
         if ($this->db->trans_status() === FALSE) {
@@ -34,21 +38,77 @@ class OrderModel extends CI_Model {
 
         return true;
     }
+
     
-    
+    function selUserOrder($orderId, $buyerPhone) {
+        $conditions = "order_id='$orderId' AND buyer_phone='$buyerPhone'";
+        $this->db->where($conditions);
+        $order = $this->db->get('ct_order')->result_array();
+        foreach ($order as $key => $value) {
+            $order[$key] = $this->selOrderDetail($value);
+        }
+        return $order;
+    }
+
+
     function selOrder($orderId) {
         $this->db->where('id', $orderId);
-        log_message('debug', '取得訂單, orderId:' . $orderId); // test log
+        log_message('info', '取得訂單, orderId:' . $orderId); // test log
         
         return $this->db->get('ct_order')->row_array();
     }
 
 
-    function selOrderDetail($orderId) {
-        $this->db->where('order_id', $orderId);
-        log_message('debug', '取得訂單明細, orderId:' . $orderId); // test log
+    function selOrderDetail($order) {
+        $this->db->where('order_id', $order['id']);
+        log_message('info', '取得訂單明細, orderId:' . $order['id']); // test log
         
         return $this->db->get('ct_order_detail')->row_array();
+    }
+
+
+    function insOrder($orderDataArray) {
+        $this->db->insert('ct_order',$orderDataArray);
+        $affectedRows = $this->db->affected_rows();
+        return $affectedRows;
+    }
+
+    function insOrderDetail($orderDetailDataArray) {
+        $affectedRows = 0;
+        foreach ($orderDetailDataArray as $key => $value) {
+            $this->db->insert('ct_order_detail', $value);
+            log_message('info', '新增orderdetail, orderDetailId:' . $value['id']);
+            $affectedRows += $this->db->affected_rows();
+        }
+
+        return $affectedRows;
+    }
+
+    function updOrder($orderId, $dataArray) {
+        $this->db->where('order_id', $orderId);
+        log_message('info', '更新訂單, orderId:' . $orderId); // test log
+        $this->db->update('ct_order', $dataArray);
+        $affectedRows = $this->db->affected_rows();
+        
+        return $affectedRows;
+    }
+
+
+    function deleteOrder($orderId) {
+        $this->db->where('order_id', $orderId);
+        log_message('info', '刪除訂單, orderId:' . $orderId); // test log
+        return $this->db->delete('ct_order');
+    }
+
+
+    function checkOrderExist($orderId) {
+        $this->db->where('order_id', $orderId);
+        log_message('info', '檢查訂單, orderId:' . $orderId);  // test log
+
+        $order = $this->db->get('ct_order')->row_array();
+        log_message('info', 'order content: ' . $order . ', sizeOf: ' . sizeof($order));
+
+        return ($order ? true : false);
     }
 }
 
