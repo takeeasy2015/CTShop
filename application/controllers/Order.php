@@ -9,6 +9,7 @@ class Order extends CI_Controller {
 
         $this->load->model('OrderModel');
         $this->load->library('ShopConstants');
+        include('application/libraries/ECPay.Payment.Integration.php');
     }
 
     /**
@@ -114,10 +115,41 @@ class Order extends CI_Controller {
                 $orderDetailArray[$key]['product_photo'] = $value['options']['image'];
             }
 
-           
-            $this->OrderModel->createOrder($orderDataArray, $orderDetailArray);
-            $this->cart->destroy();
+            try {
+                $this->OrderModel->createOrder($orderDataArray, $orderDetailArray);
+                $this->cart->destroy();
 
+                $obj = new ECPay_AllInOne();
+                
+                $obj->ServiceURL = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V2";
+                $obj->HashKey = "5294y06JbISpM5x9";
+                $obj->HashIV = "v77hoKGq4kWxNNIS";
+                $obj->MerchantID = "2000132";
+
+                $obj->Send['ReturnURL'] = $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . $orderDataArray['id'];
+                $obj->Send['MerchantTradeNo'] = $orderDataArray['id'];
+                $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');
+                $obj->Send['TotalAmount'] = $this->cart->total() + ShopConstants::SHIPPING_FEE;
+                $obj->Send['TradeDesc'] = '購買商品';
+                $obj->Send['ChoosePayment'] = ECPay_PaymentMethod::Credit;
+
+                //訂購資料
+                foreach ($orderDetailArray as $key => $value) {
+                    array_push($obj->Send['Items'], array(
+                        'Name' => $value['product_name'],
+                        'Price' => $value['product_price'],
+                        'Currency' => '元',
+                        'Quantity' => $value['product_qty'],
+                        'URL' => $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . orderDataArray['id']
+                    ));
+                }
+
+                $obj->CheckOut();
+
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+            
             $view_data['orderDataArray'] = $orderDataArray;
 
         } else {
@@ -128,8 +160,7 @@ class Order extends CI_Controller {
         // 顯示頁面
          $this->load->view("layout", $view_data);
     }
-
-
+    
     function testgenNumber() {
         $nowTime = time();
         $fdate = date("ymdHi",time());
@@ -162,6 +193,8 @@ class Order extends CI_Controller {
         $order = $this->OrderModel->selOrder((string) $cordId);
         $orderDetail = $this->OrderModel->selOrderDetail((string) $cordId);
 
+
+
         $view_data['errorMsg'] = '有訂單';
 
         $this->load->view("layout", $view_data);
@@ -170,6 +203,7 @@ class Order extends CI_Controller {
     function order_detail($orderId, $phone, $email) {    
     }
 
+    
 }
 
 ?>
