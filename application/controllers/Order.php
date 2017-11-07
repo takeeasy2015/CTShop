@@ -129,7 +129,7 @@ class Order extends CI_Controller {
                 $obj->Send['ReturnURL'] = $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . $orderDataArray['id'];
                 $obj->Send['MerchantTradeNo'] = $orderDataArray['id'];
                 $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');
-                $obj->Send['TotalAmount'] = getOrderPriceTotal();  // TODO 這裡要檢查會不會有0元的問題
+                $obj->Send['TotalAmount'] = $this->getOrderPriceTotal();  // TODO 這裡要檢查會不會有0元的問題
                 $obj->Send['TradeDesc'] = '購買商品';
                 $obj->Send['ChoosePayment'] = ECPay_PaymentMethod::Credit;
 
