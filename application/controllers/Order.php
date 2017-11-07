@@ -116,8 +116,8 @@ class Order extends CI_Controller {
             }
 
             try {
+                // 建立訂單
                 $this->OrderModel->createOrder($orderDataArray, $orderDetailArray);
-                $this->cart->destroy();
 
                 $obj = new ECPay_AllInOne();
                 
@@ -129,20 +129,23 @@ class Order extends CI_Controller {
                 $obj->Send['ReturnURL'] = $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . $orderDataArray['id'];
                 $obj->Send['MerchantTradeNo'] = $orderDataArray['id'];
                 $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');
-                $obj->Send['TotalAmount'] = $this->cart->total() + ShopConstants::SHIPPING_FEE;
+                $obj->Send['TotalAmount'] = getOrderPriceTotal();  // TODO 這裡要檢查會不會有0元的問題
                 $obj->Send['TradeDesc'] = '購買商品';
                 $obj->Send['ChoosePayment'] = ECPay_PaymentMethod::Credit;
 
-                //訂購資料
+                // 訂購資料
                 foreach ($orderDetailArray as $key => $value) {
                     array_push($obj->Send['Items'], array(
                         'Name' => $value['product_name'],
                         'Price' => $value['product_price'],
                         'Currency' => '元',
                         'Quantity' => $value['product_qty'],
-                        'URL' => $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . orderDataArray['id']
+                        'URL' => $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . $orderDataArray['id']
                     ));
                 }
+
+                // 清空購物車
+                $this->cart->destroy();
 
                 $obj->CheckOut();
 
@@ -173,9 +176,10 @@ class Order extends CI_Controller {
 
     // 取得訂單總金額(包含運費)
     function getOrderPriceTotal() {
-        return $this->cart->total() + ShopConstants::SHIPPING_FEE;
+        return (int)$this->cart->total() + ShopConstants::SHIPPING_FEE;
     }
     
+    // 完成訂單
     function completeOrder($cordId) {
         $view_data = array(
             'title' => 'CTShop - Order Complete',
@@ -189,6 +193,14 @@ class Order extends CI_Controller {
             $this->load->view("layout", $view_data);
             return;
         }
+
+        //TODO 檢查訂單是否存在
+
+        //TODO 撈出訂單
+
+        //TODO 檢查是否付款成功
+
+        //TODO 若付款成功, 回壓訂單付款狀態
 
         $order = $this->OrderModel->selOrder((string) $cordId);
         $orderDetail = $this->OrderModel->selOrderDetail((string) $cordId);

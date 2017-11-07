@@ -314,7 +314,7 @@
 			$("#bPhoneArea").val("0911");
 			$("#bPhone").val("123456");
 			$("#bZipCode").val("110");
-			$("#bAddress").val("測試路");
+			$("#bAddress").val("測試路50號");
 
 			$("#cName").val("小美");
 			$("#cTelArea").val("02");
