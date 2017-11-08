@@ -40,7 +40,7 @@ class OrderModel extends CI_Model {
 
     
     function selUserOrder($orderId, $buyerPhone) {
-        $conditions = "order_id='$orderId' AND buyer_phone='$buyerPhone'";
+        $conditions = "id='$orderId' AND buyer_phone='$buyerPhone'";
         $this->db->where($conditions);
         $order = $this->db->get('ct_order')->result_array();
         foreach ($order as $key => $value) {
@@ -84,7 +84,7 @@ class OrderModel extends CI_Model {
     }
 
     function updOrder($orderId, $dataArray) {
-        $this->db->where('order_id', $orderId);
+        $this->db->where('id', $orderId);
         log_message('info', '更新訂單, orderId:' . $orderId); // test log
         $this->db->update('ct_order', $dataArray);
         $affectedRows = $this->db->affected_rows();
@@ -94,7 +94,7 @@ class OrderModel extends CI_Model {
 
 
     function deleteOrder($orderId) {
-        $this->db->where('order_id', $orderId);
+        $this->db->where('id', $orderId);
         log_message('info', '刪除訂單, orderId:' . $orderId); // test log
         return $this->db->delete('ct_order');
     }
@@ -102,10 +102,10 @@ class OrderModel extends CI_Model {
 
     function checkOrderExist($orderId, $orderStatus) {
         if (strtoupper($orderStatus) == "ALL") {
-            $this->db->where('order_id', $orderId);
+            $this->db->where('id', $orderId);
             log_message('info', '檢查訂單, orderId:' . $orderId);  // test log
         } else {
-            $conditions = "order_id='$orderId' AND status='$orderStatus'";
+            $conditions = "id='$orderId' AND status='$orderStatus'";
             $this->db->where($conditions);
             log_message('info', '檢查特定狀態訂單, orderId:' . $orderId); 
         }
@@ -113,7 +113,7 @@ class OrderModel extends CI_Model {
         $order = $this->db->get('ct_order')->result_array();
         log_message('info', 'order content: ' . $order . ', sizeOf: ' . sizeof($order));  // test log
 
-        return ($order ? true : false);
+        return (sizeof($order) > 0 ? true : false);
     }
 }
 

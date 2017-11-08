@@ -189,8 +189,12 @@ class Order extends CI_Controller {
             // 檢查是否付款成功
         	if ($check && $response['RtnCode'] == '1') {
                 // 檢查未付款的訂單是否存在
-                if ($this->OrderModel->checkOrderExist($cordId, ShopConstants::ORDERSTATUS_UNPAID)) { 
-                    $updDataArray = array('status' => ShopConstants::ORDERSTATUS_PAID);
+                if ($this->OrderModel->checkOrderExist($orderId, ShopConstants::ORDERSTATUS_UNPAID)) { 
+                    $updDataArray = array(
+                        'status' => ShopConstants::ORDERSTATUS_PAID,
+                        'update_date' => date('Y-m-d'),
+                        'update_time' => date('H:i:s'),
+                    );
                     
                     $updCount = $this->OrderModel->updOrder($orderId, $updDataArray);
                     if ($updCount > 0 ) {
