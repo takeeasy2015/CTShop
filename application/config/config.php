@@ -23,7 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:8081/CTShop/';
+// $config['base_url'] = 'http://localhost:8081/CTShop/';
+$config['base_url'] = 'http://35.185.162.51/CTShop/';
 
 /*
 |--------------------------------------------------------------------------
@@ -234,7 +235,7 @@ $config['log_threshold'] = 3;
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = FCPATH . '/application/logs/';
 
 /*
 |--------------------------------------------------------------------------
@@ -260,7 +261,7 @@ $config['log_file_extension'] = '';
 | IMPORTANT: This MUST be an integer (no quotes) and you MUST use octal
 |            integer notation (i.e. 0700, 0644, etc.)
 */
-$config['log_file_permissions'] = 0644;
+$config['log_file_permissions'] = 0777;
 
 /*
 |--------------------------------------------------------------------------
