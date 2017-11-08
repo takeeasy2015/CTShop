@@ -42,7 +42,7 @@ class Order extends CI_Controller {
         // 取得購物車
         $cart = $this->cart->contents(true);
         if (sizeof($cart) == 0) {
-            $url = 'http://' . $_SERVER['HTTP_HOST'] . '/CTShop/checkout';
+            $url = base_url('checkout');
             log_message('info', 'redirect url: ' . $url); // test log
             redirect($url, 'refresh');
   
@@ -121,17 +121,21 @@ class Order extends CI_Controller {
 
                 $obj = new ECPay_AllInOne();
                 
-                $obj->ServiceURL = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V2";
-                $obj->HashKey = "5294y06JbISpM5x9";
-                $obj->HashIV = "v77hoKGq4kWxNNIS";
-                $obj->MerchantID = "2000132";
+                $obj->ServiceURL = ShopConstants::SERVICEURL_TEST;
+                $obj->HashKey = ShopConstants::HASHKEY_TEST;
+                $obj->HashIV = ShopConstants::HASHIV_TEST;
+                $obj->MerchantID = ShopConstants::MERCHANTID_TEST;
 
-                $obj->Send['ReturnURL'] = $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . $orderDataArray['id'];
+                $obj->Send['ReturnURL'] =  base_url("payCallback/" . $orderDataArray['id']);
+                $obj->Send['OrderResultURL'] = base_url("orderComplete/" . $orderDataArray['id']);
                 $obj->Send['MerchantTradeNo'] = $orderDataArray['id'];
                 $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');
                 $obj->Send['TotalAmount'] = $this->getOrderPriceTotal();  // TODO 這裡要檢查會不會有0元的問題
                 $obj->Send['TradeDesc'] = '購買商品';
                 $obj->Send['ChoosePayment'] = ECPay_PaymentMethod::Credit;
+
+                log_message('info', 'ReturnURL: ' . $obj->Send['ReturnURL']); // test log
+                log_message('info', 'OrderResultURL: ' . $obj->Send['OrderResultURL']); // test log
 
                 // 訂購資料
                 foreach ($orderDetailArray as $key => $value) {
@@ -140,7 +144,7 @@ class Order extends CI_Controller {
                         'Price' => $value['product_price'],
                         'Currency' => '元',
                         'Quantity' => $value['product_qty'],
-                        'URL' => $_SERVER['HTTP_HOST'] . "/CTShop/orderComplete/" . $orderDataArray['id']
+                        'URL' => base_url("orderComplete/" . $orderDataArray['id'])
                     ));
                 }
 
@@ -161,9 +165,81 @@ class Order extends CI_Controller {
         }  
 
         // 顯示頁面
-         $this->load->view("layout", $view_data);
+        $this->load->view("layout", $view_data);
     }
     
+    // 付款結果回傳
+    function payCallback($orderId) {
+        try {
+        	$obj = new ECPay_AllInOne();
+        	$obj -> HashKey = ShopConstants::HASHKEY_TEST;
+        	$obj -> HashIV = ShopConstants::HASHIV_TEST;
+        	$obj -> MerchantID = ShopConstants::MERCHANTID_TEST;
+        	$response = $obj -> CheckOutFeedback();
+            
+            log_message('info', 'to CheckOutFeedback'); // test log
+
+            $check = false;
+            if ($orderId == $response['MerchantTradeNo']) {
+                 $check = true;
+            } else {
+                log_message('info', '付款結果回傳的訂單編號不符, orderId: '. $orderId . ', response orderId: ' . $response['MerchantTradeNo']);
+            }
+
+            // 檢查是否付款成功
+        	if ($check && $response['RtnCode'] == '1') {
+                // 檢查未付款的訂單是否存在
+                if ($this->OrderModel->checkOrderExist($cordId, ShopConstants::ORDERSTATUS_UNPAID)) { 
+                    $updDataArray = array('status' => ShopConstants::ORDERSTATUS_PAID);
+                    
+                    $updCount = $this->OrderModel->updOrder($orderId, $updDataArray);
+                    if ($updCount > 0 ) {
+                        echo '1|OK';
+                    } else {
+                        // 付款失敗
+                        echo 'FAIL';
+                    }
+                }
+        	} else {
+                // orderId不匹配; or RtnCode != 1;
+                echo 'FAIL';
+        	}
+
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+
+    // 完成訂單
+    function completeOrder($cordId) {
+        $view_data = array(
+            'title' => 'CTShop - Order Complete',
+            'view' => 'order/complete.php'
+        );
+
+        log_message('info', 'cordId: ' . $cordId); // test log
+        if (strlen($cordId) < 10) {
+            $view_data['view'] = 'order/fail.php';
+            $view_data['errorMsg'] = '找不到訂單編號';
+            // 顯示頁面
+            $this->load->view("layout", $view_data);
+            return;
+        }
+        
+        // 撈出訂單
+        $view_data['order'] = $this->OrderModel->selOrder($cordId);
+
+
+        $view_data['errorMsg'] = '有訂單';
+
+        $this->load->view("layout", $view_data);
+        $order = $this->OrderModel->selOrder((string) $cordId);
+        $orderDetail = $this->OrderModel->selOrderDetail($order);
+        
+    }
+
+
     function testgenNumber() {
         $nowTime = time();
         $fdate = date("ymdHi",time());
@@ -179,38 +255,6 @@ class Order extends CI_Controller {
         return (int)$this->cart->total() + ShopConstants::SHIPPING_FEE;
     }
     
-    // 完成訂單
-    function completeOrder($cordId) {
-        $view_data = array(
-            'title' => 'CTShop - Order Complete',
-            'view' => 'order/complete.php'
-        );
-
-        log_message('info', 'cordId: ' . $cordId); // test log
-        if (sizeof($cordId) < 14) {
-            $view_data['errorMsg'] = '找不到訂單編號';
-            // 顯示頁面
-            $this->load->view("layout", $view_data);
-            return;
-        }
-
-        //TODO 檢查訂單是否存在
-        
-        //TODO 撈出訂單
-
-        //TODO 檢查是否付款成功
-
-        //TODO 若付款成功, 回壓訂單付款狀態
-
-        $order = $this->OrderModel->selOrder((string) $cordId);
-        $orderDetail = $this->OrderModel->selOrderDetail((string) $cordId);
-
-
-
-        $view_data['errorMsg'] = '有訂單';
-
-        $this->load->view("layout", $view_data);
-    }
 
     function order_detail($orderId, $phone, $email) {    
     }

@@ -62,6 +62,7 @@ $route['api/removeCartItem'] = 'Api/CartApi/removeCartItem';
 // order
 $route['orderSave'] = 'Order/saveOrder';
 $route['orderComplete/(:any)'] = 'Order/completeOrder/$1';
+$route['payCallback/(:any)'] = 'Order/payCallback/$1';
 
 // trace
 $route['genNumber'] = 'Order/testgenNumber';

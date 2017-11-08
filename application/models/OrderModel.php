@@ -30,8 +30,7 @@ class OrderModel extends CI_Model {
             $this->db->trans_rollback();
             log_message('info', '訂單rollback, orderid:' . $orderDataArray['id']);
             return false;
-        }
-        else {
+        } else {
             $this->db->trans_commit();
             log_message('info', '訂單commit, orderid:' . $orderDataArray['id']);
         }
@@ -101,12 +100,18 @@ class OrderModel extends CI_Model {
     }
 
 
-    function checkOrderExist($orderId) {
-        $this->db->where('order_id', $orderId);
-        log_message('info', '檢查訂單, orderId:' . $orderId);  // test log
+    function checkOrderExist($orderId, $orderStatus) {
+        if (strtoupper($orderStatus) == "ALL") {
+            $this->db->where('order_id', $orderId);
+            log_message('info', '檢查訂單, orderId:' . $orderId);  // test log
+        } else {
+            $conditions = "order_id='$orderId' AND status='$orderStatus'";
+            $this->db->where($conditions);
+            log_message('info', '檢查特定狀態訂單, orderId:' . $orderId); 
+        }
 
-        $order = $this->db->get('ct_order')->row_array();
-        log_message('info', 'order content: ' . $order . ', sizeOf: ' . sizeof($order));
+        $order = $this->db->get('ct_order')->result_array();
+        log_message('info', 'order content: ' . $order . ', sizeOf: ' . sizeof($order));  // test log
 
         return ($order ? true : false);
     }
