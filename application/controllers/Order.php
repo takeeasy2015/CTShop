@@ -55,10 +55,10 @@ class Order extends CI_Controller {
             $bTelArea = $this->input->post('bTelArea');
             $bTel = $this->input->post('bTel');
             $bTelExt = $this->input->post('bTelExt');
-            $bCity = $this->input->post('hbCity');
-            $bDist = $this->input->post('hbDist');
+            $bCity = $this->input->post('bCity');
+            $bDist = $this->input->post('bDist');
             $bAddress = $this->input->post('bAddress');
-            $bZipCode = $this->input->post('hbZipCode');
+            $bZipCode = $this->input->post('bZipCode');
             log_message('info', 'get info'); // test log
             log_message('info', '訂購人姓名: ' . $bName); // test log
             log_message('info', '訂購人信箱: ' . $bEmail); // test log
@@ -69,10 +69,10 @@ class Order extends CI_Controller {
             $cTelArea = $this->input->post('cTelArea');
             $cTel = $this->input->post('cTel');
             $cTelExt = $this->input->post('cTelExt');
-            $cCity = $this->input->post('hcCity');
-            $cDist = $this->input->post('hcDist');
+            $cCity = $this->input->post('cCity');
+            $cDist = $this->input->post('cDist');
             $cAddress = $this->input->post('cAddress');
-            $cZipCode = $this->input->post('hcZipCode');
+            $cZipCode = $this->input->post('cZipCode');
 
             $priceTotal = $this->input->post('priceTotal');
 

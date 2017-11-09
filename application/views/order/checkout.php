@@ -77,7 +77,7 @@
 		</div>
 		<!-- ----- 訂購人資訊 ----- -->
 		<h5 class="text-center mt-5">訂購人資訊</h5>
-		<form action="orderSave" id="orderForm" method="post">
+		<form action="orderSave" name="orderForm" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-7">
 					<label for="bName">訂購人姓名</label>
@@ -128,19 +128,16 @@
 				<div class="form-group col-md-4">
 					<label for="inputCity">縣市</label>
 					<select class="form-control" id="bCity" name="bCity">
-						<option value="台北市">台北市</option>
+						<option value="縣市">縣市</option>
 					</select>
 				</div>
 				<div class="form-group col-md-5">
 					<label for="inputCityArea">鄉鎮市區</label>
 					<select class="form-control" id="bDistrict" name="bDistrict">
-						<option value="中正區">中正區</option>
-						<option value="大安區">大安區</option>
+						<option value="鄉鎮市區">鄉鎮市區</option>
 					</select>
 				</div>
-				<input type="hidden" id="hbCity" name="hbCity">
-				<input type="hidden" id="hbDist" name="hbDist">
-				<input type="hidden" id="hbZipCode" name="hbZipCode">
+				<input type="hidden" id="bZipCode" name="bZipCode">
 			</div>
 			<div class="form-group">
 				<label for="inputAddress">地址</label>
@@ -198,28 +195,27 @@
 				</div>
 
 				<!-- 聯絡地址 -->
-				<div class="form-row">
+				<div class="form-row cLocation">
 					<div class="form-group col-md-4">
 						<label for="inputCity">縣市</label>
-						<select class="form-control" id="cCity" name="cCity">
-							<option value="台北市">台北市</option>
+						<select class="country form-control" name="country">
+							<option value="縣市">縣市</option>
 						</select>
 					</div>
 					<div class="form-group col-md-5">
 						<label for="inputCityArea">鄉鎮市區</label>
-						<select class="form-control" id="cCityArea" name="cDirstrict">
-							<option value="中正區">中正區</option>
-							<option value="大安區">大安區</option>
+						<select class="district form-control" name="district">
+							<option value="鄉鎮市區">鄉鎮市區</option>
 						</select>
-						<input type="hidden" id="hcCity" name="hcCity">
-						<input type="hidden" id="hcDist" name="hcDist">
-						<input type="hidden" id="hcZipCode" name="hcZipCode">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="inputAddress">地址</label>
 					<input type="text" class="form-control" id="cAddress" name="cAddress" placeholder="詳細地址">
 				</div>
+				<input type="hidden" id="cCity" name="cCity">
+				<input type="hidden" id="cDist" name="cDist">
+				<input type="hidden" id="cZipCode" name="cZipCode">
 			</div>
 
 			
@@ -235,6 +231,7 @@
 </div>
 
  <!--  JS Plugin -->
+<srcipt type="text/javascript" src="<?=base_url('assets/js/twzipcode.min.js')?>"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_zh_TW.min.js"></script>
@@ -245,6 +242,7 @@
 			testInfo(); // test modify
 			checkBuyerIsReceiver();
 			validateForm();
+			// initLocationOption();
         });
 
         // function removeCartItem() {
@@ -359,7 +357,7 @@
 
 
 		function validateForm() {
-			$('#orderForm').validate({
+			$('form[name=orderForm]').validate({
 				errorClass: "order-input-error",
 				// validClass: "order-input-valid",
 				rules: {
@@ -515,5 +513,31 @@
 				}
 			})
 		}
+		
+		// function initLocationOption() {
+		// 	var bCity = document.getElementById('bCity');
+		// 	var bDistrict = document.getElementById('bDistrict');
+		// 	initCityAndDist(document.orderForm.bZipCode.value, bCity, bDistrict);
 
-    </script>
+		// 	var cCity = document.getElementById('cCity');
+		// 	var cDistrict = document.getElementById('cDistrict');
+		// 	initCityAndDist(document.orderForm.cZipCode.value, cCity, cDistrict);
+
+		// 	$(".bCity").on('change', function () {
+		// 		showDistGroup(bDistrict, bCity.value, '');
+		// 	});
+
+		// 	$(".bDistrict").on('change', function(){
+		// 		changeZip($('bZipCode').val(), bDistrict.value, $('bAddress').val(), bCity, bDistrict);
+		// 	});
+
+		// 	$(".cCity").on('change', function () {
+		// 		showDistGroup(cDistrict, cCity.value, '');
+		// 	});
+
+		// 	$(".cDistrict").on('change', function(){
+		// 		changeZip($('cZipCode').val(), cDistrict.value, $('cAddress').val(), cCity, cDistrict);
+		// 	});
+		// }
+
+</script>
