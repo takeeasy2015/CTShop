@@ -124,25 +124,27 @@
 			</div>
 
 			<!-- 聯絡地址 -->
+			<label for="inputAddress">地址</label>
 			<div class="form-row">
-				<div class="form-group col-md-4">
-					<label for="inputCity">縣市</label>
+				<div class="form-group col-sm-3">
+					<input type="text" class="form-control" id="bZipCode" name="bZipCode" placeholder="郵遞區號" readonly>
+				</div>
+				<div class="form-group col-sm-4">
 					<select class="form-control" id="bCity" name="bCity">
 						<option value="縣市">縣市</option>
 					</select>
 				</div>
-				<div class="form-group col-md-5">
-					<label for="inputCityArea">鄉鎮市區</label>
+				<div class="form-group col-sm-5">
 					<select class="form-control" id="bDistrict" name="bDistrict">
 						<option value="鄉鎮市區">鄉鎮市區</option>
 					</select>
 				</div>
-				<input type="hidden" id="bZipCode" name="bZipCode">
 			</div>
 			<div class="form-group">
-				<label for="inputAddress">地址</label>
 				<input type="text" class="form-control" id="bAddress" name="bAddress" placeholder="詳細地址">
 			</div>
+			<input type="hidden" name="bDist">
+			<input type="hidden" name="bZip">
 			
 			<!-- ----- 收件人資訊 ----- -->
 			<h5 class="text-center mt-5">收件人資訊</h5>
@@ -195,34 +197,33 @@
 				</div>
 
 				<!-- 聯絡地址 -->
-				<div class="form-row cLocation">
-					<div class="form-group col-md-4">
-						<label for="inputCity">縣市</label>
-						<select class="country form-control" name="country">
+				<label for="inputAddress">地址</label>
+				<div class="form-row">
+					<div class="form-group col-sm-3">
+						<input type="text" class="form-control" id="cZipCode" name="cZipCode" placeholder="郵遞區號" readonly>
+					</div>
+					<div class="form-group col-sm-4">
+						<select class="form-control" id="cCity" name="cCity">
 							<option value="縣市">縣市</option>
 						</select>
 					</div>
-					<div class="form-group col-md-5">
-						<label for="inputCityArea">鄉鎮市區</label>
-						<select class="district form-control" name="district">
+					<div class="form-group col-sm-5">
+						<select class="form-control" id="cDistrict" name="cDistrict">
 							<option value="鄉鎮市區">鄉鎮市區</option>
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="inputAddress">地址</label>
 					<input type="text" class="form-control" id="cAddress" name="cAddress" placeholder="詳細地址">
 				</div>
-				<input type="hidden" id="cCity" name="cCity">
-				<input type="hidden" id="cDist" name="cDist">
-				<input type="hidden" id="cZipCode" name="cZipCode">
+				<input type="hidden" name="cDist">
+				<input type="hidden" name="cZip">
 			</div>
-
 			
 			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
+			<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a><!-- TODO 要再更換網址 -->
 			<input type="hidden" name="rule" value="ordersave">
 		</form> 
-		<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a><!-- TODO 要再更換網址 -->
 	</div>
 </div>
 
@@ -231,7 +232,7 @@
 </div>
 
  <!--  JS Plugin -->
-<srcipt type="text/javascript" src="<?=base_url('assets/js/twzipcode.min.js')?>"></script>
+<script type="text/javascript" src="<?=base_url('assets/js/address.js?v11110122')?>"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_zh_TW.min.js"></script>
@@ -242,7 +243,7 @@
 			testInfo(); // test modify
 			checkBuyerIsReceiver();
 			validateForm();
-			// initLocationOption();
+			initLocationOption();
         });
 
         // function removeCartItem() {
@@ -343,9 +344,9 @@
 					$("#cTelExt").val($("#bTelExt").val());
 					$("#cPhoneArea").val($("#bPhoneArea").val());
 					$("#cPhone").val($("#bPhone").val());
-					$("#hcZipCode").val($("#hbZipCode").val());
-					$("#hcCity").val($("#hbCity").val());
-					$("#hcDist").val($("#hbDist").val());
+					$("#cZipCode").val($("#bZipCode").val());
+					$("#cCity").val($("#bCity").val());
+					$("#cDist").val($("#bDist").val());
 					$("#cAddress").val($("#bAddress").val());
 					$('.receiverBlock').css('display', 'none');
 				} else {
@@ -514,30 +515,38 @@
 			})
 		}
 		
-		// function initLocationOption() {
-		// 	var bCity = document.getElementById('bCity');
-		// 	var bDistrict = document.getElementById('bDistrict');
-		// 	initCityAndDist(document.orderForm.bZipCode.value, bCity, bDistrict);
+		function initLocationOption() {
+			var bCity = document.getElementById('bCity');
+			var bDistrict = document.getElementById('bDistrict');
+			initCityAndDist(document.orderForm.bZipCode.value, bCity, bDistrict);
 
-		// 	var cCity = document.getElementById('cCity');
-		// 	var cDistrict = document.getElementById('cDistrict');
-		// 	initCityAndDist(document.orderForm.cZipCode.value, cCity, cDistrict);
+			var cCity = document.getElementById('cCity');
+			var cDistrict = document.getElementById('cDistrict');
+			initCityAndDist(document.orderForm.cZipCode.value, cCity, cDistrict);
 
-		// 	$(".bCity").on('change', function () {
-		// 		showDistGroup(bDistrict, bCity.value, '');
-		// 	});
+			$("#bCity").on('change', function () {
+				showDistGroup(bDistrict, bCity.value, '');
+				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict);
+				$("#bZipCode").val($('input[name=bZip]').val());
+			});
 
-		// 	$(".bDistrict").on('change', function(){
-		// 		changeZip($('bZipCode').val(), bDistrict.value, $('bAddress').val(), bCity, bDistrict);
-		// 	});
+			$("#bDistrict").on('change', function(){
+				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict);
+				$("#bZipCode").val($('input[name=bZip]').val());
+			});
 
-		// 	$(".cCity").on('change', function () {
-		// 		showDistGroup(cDistrict, cCity.value, '');
-		// 	});
+			$("#cCity").on('change', function () {
+				showDistGroup(cDistrict, cCity.value, '');
+				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict);
+				$("#bZipCode").val($('input[name=bZip]').val());
+			});
 
-		// 	$(".cDistrict").on('change', function(){
-		// 		changeZip($('cZipCode').val(), cDistrict.value, $('cAddress').val(), cCity, cDistrict);
-		// 	});
-		// }
+			$("#cDistrict").on('change', function(){
+				changeZip(document.orderForm.cZip, document.orderForm.cDist, cDistrict);
+				$("#cZipCode").val($('input[name=cZip]').val());
+				
+
+			});
+		}
 
 </script>

@@ -58,7 +58,7 @@ class Order extends CI_Controller {
             $bCity = $this->input->post('bCity');
             $bDist = $this->input->post('bDist');
             $bAddress = $this->input->post('bAddress');
-            $bZipCode = $this->input->post('bZipCode');
+            $bZipCode = $this->input->post('bZip');
             log_message('info', 'get info'); // test log
             log_message('info', '訂購人姓名: ' . $bName); // test log
             log_message('info', '訂購人信箱: ' . $bEmail); // test log
@@ -72,7 +72,7 @@ class Order extends CI_Controller {
             $cCity = $this->input->post('cCity');
             $cDist = $this->input->post('cDist');
             $cAddress = $this->input->post('cAddress');
-            $cZipCode = $this->input->post('cZipCode');
+            $cZipCode = $this->input->post('cZip');
 
             $priceTotal = $this->input->post('priceTotal');
 
