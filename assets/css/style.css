@@ -1,4 +1,7 @@
 
+* {
+    font-family: 微軟正黑體
+}
 
 /* Order Checkout */
 
@@ -12,3 +15,18 @@
     margin-top: 2px;
     color: #9e9d9d;
 }
+
+form label {
+    font-weight: bold;
+    color: #555555;
+}
+
+/* jQuery Validate */
+.order-input-error {
+    color: red;
+    font-size: 16px;
+}
+
+/* .order-input-valid {
+    color: green;
+} */

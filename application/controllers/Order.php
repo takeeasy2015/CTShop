@@ -55,10 +55,10 @@ class Order extends CI_Controller {
             $bTelArea = $this->input->post('bTelArea');
             $bTel = $this->input->post('bTel');
             $bTelExt = $this->input->post('bTelExt');
-            $bCity = $this->input->post('bCity');
-            $bCityArea = $this->input->post('bCityArea');
+            $bCity = $this->input->post('hbCity');
+            $bDist = $this->input->post('hbDist');
             $bAddress = $this->input->post('bAddress');
-            $bZipCode = $this->input->post('bZipCode');
+            $bZipCode = $this->input->post('hbZipCode');
             log_message('info', 'get info'); // test log
             log_message('info', '訂購人姓名: ' . $bName); // test log
             log_message('info', '訂購人信箱: ' . $bEmail); // test log
@@ -69,10 +69,10 @@ class Order extends CI_Controller {
             $cTelArea = $this->input->post('cTelArea');
             $cTel = $this->input->post('cTel');
             $cTelExt = $this->input->post('cTelExt');
-            $cCity = $this->input->post('cCity');
-            $cCityArea = $this->input->post('cCityArea');
+            $cCity = $this->input->post('hcCity');
+            $cDist = $this->input->post('hcDist');
             $cAddress = $this->input->post('cAddress');
-            $cZipCode = $this->input->post('cZipCode');
+            $cZipCode = $this->input->post('hcZipCode');
 
             $priceTotal = $this->input->post('priceTotal');
 
@@ -85,15 +85,15 @@ class Order extends CI_Controller {
                 'buyer_phone' => $bPhoneArea . "-" . $bPhone,
                 'buyer_city' => $bCity,
                 'buyer_zipcode' => $bZipCode,
-                'buyer_addr' => $bAddress,
+                'buyer_addr' => $bDist . $bAddress,
                 'buyer_remark' => '',
                 'remark' => '',
                 'receiver_name' => $cName,
                 'receiver_tel' => $cTelArea . "-" . $cTel . ($cTelExt == null || $cTelExt == '' ? "" : '-' . $cTelExt),
                 'receiver_phone' => $cPhoneArea . "-" . $cPhone,
-                'receiver_city' => $bCity,
-                'receiver_zipcode' => $bZipCode,
-                'receiver_addr' => $bAddress,
+                'receiver_city' => $cCity,
+                'receiver_zipcode' => $cZipCode,
+                'receiver_addr' => $cDist . $cAddress,
                 'total_price' => $this->getOrderPriceTotal(),
                 'payment' => ShopConstants::OTHER_PAYMENT,
                 'id' => uniqid(),

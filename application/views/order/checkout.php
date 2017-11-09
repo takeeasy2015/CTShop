@@ -75,13 +75,13 @@
 				</tbody>
 			</table>
 		</div>
-		<!-- ----- 訂購人資料 ----- -->
-		<h5 class="text-center mt-5">訂購人資料</h5>
+		<!-- ----- 訂購人資訊 ----- -->
+		<h5 class="text-center mt-5">訂購人資訊</h5>
 		<form action="orderSave" id="orderForm" method="post">
 			<div class="form-row">
 				<div class="form-group col-md-7">
 					<label for="bName">訂購人姓名</label>
-					<input type="text" class="form-control" id="bName" name="bName" placeholder="訂購人姓名">
+					<input type="text" class="form-control" id="bName" name="bName" placeholder="請輸入真實姓名">
 				</div>
 				<div class="form-group col-md-5">
 					<label for="bIdNumber">身份證字號</label>
@@ -89,7 +89,7 @@
 				</div>
 				<div class="form-group col-md-6">
 					<label for="bEmail">Email</label>
-					<input type="email" class="form-control" id="bEmail" name="bEmail" placeholder="service@ct.org.tw">
+					<input type="email" class="form-control" id="bEmail" name="bEmail" placeholder="請填寫正確且慣用的電子信箱 e.g. service@ct.org.tw">
 				</div>
 			</div>
 			<!-- 聯絡手機 -->
@@ -128,25 +128,27 @@
 				<div class="form-group col-md-4">
 					<label for="inputCity">縣市</label>
 					<select class="form-control" id="bCity" name="bCity">
-						<option value="1">台北市</option>
+						<option value="台北市">台北市</option>
 					</select>
 				</div>
 				<div class="form-group col-md-5">
 					<label for="inputCityArea">鄉鎮市區</label>
-					<select class="form-control" id="bCityArea" name="bCityArea">
-						<option value="100">中正區</option>
-						<option value="106">大安區</option>
+					<select class="form-control" id="bDistrict" name="bDistrict">
+						<option value="中正區">中正區</option>
+						<option value="大安區">大安區</option>
 					</select>
-					<input type="hidden" id="bZipCode" name="bZipCode">
 				</div>
+				<input type="hidden" id="hbCity" name="hbCity">
+				<input type="hidden" id="hbDist" name="hbDist">
+				<input type="hidden" id="hbZipCode" name="hbZipCode">
 			</div>
 			<div class="form-group">
 				<label for="inputAddress">地址</label>
-				<input type="text" class="form-control" id="bAddress" name="bAddress" placeholder="幸福路330號">
+				<input type="text" class="form-control" id="bAddress" name="bAddress" placeholder="詳細地址">
 			</div>
 			
-			<!-- ----- 收件人資料 ----- -->
-			<h5 class="text-center mt-5">收件人資料</h5>
+			<!-- ----- 收件人資訊 ----- -->
+			<h5 class="text-center mt-5">收件人資訊</h5>
 			<div class="form-group">
 				<div class="form-check">
 					<label class="form-check-label">
@@ -200,21 +202,23 @@
 					<div class="form-group col-md-4">
 						<label for="inputCity">縣市</label>
 						<select class="form-control" id="cCity" name="cCity">
-							<option value="1">台北市</option>
+							<option value="台北市">台北市</option>
 						</select>
 					</div>
 					<div class="form-group col-md-5">
 						<label for="inputCityArea">鄉鎮市區</label>
-						<select class="form-control" id="cCityArea" name="cCityArea">
-							<option value="100">中正區</option>
-							<option value="106">大安區</option>
+						<select class="form-control" id="cCityArea" name="cDirstrict">
+							<option value="中正區">中正區</option>
+							<option value="大安區">大安區</option>
 						</select>
-						<input type="hidden" id="cZipCode" name="cZipCode">
+						<input type="hidden" id="hcCity" name="hcCity">
+						<input type="hidden" id="hcDist" name="hcDist">
+						<input type="hidden" id="hcZipCode" name="hcZipCode">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="inputAddress">地址</label>
-					<input type="text" class="form-control" id="cAddress" name="cAddress" placeholder="幸福路330號">
+					<input type="text" class="form-control" id="cAddress" name="cAddress" placeholder="詳細地址">
 				</div>
 			</div>
 
@@ -222,7 +226,7 @@
 			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
 			<input type="hidden" name="rule" value="ordersave">
 		</form> 
-		<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a>
+		<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a><!-- TODO 要再更換網址 -->
 	</div>
 </div>
 
@@ -313,8 +317,11 @@
 			$("#bTelExt").val("101");
 			$("#bPhoneArea").val("0911");
 			$("#bPhone").val("123456");
-			$("#bZipCode").val("110");
+			$("#hbZipCode").val("110");
+			$("#hbCity").val($("#bCity :selected").val());
+			$("#hbDist").val($("#bDistrict :selected").val());
 			$("#bAddress").val("測試路50號");
+			
 
 			$("#cName").val("小美");
 			$("#cTelArea").val("02");
@@ -322,7 +329,9 @@
 			$("#cTelExt").val("");
 			$("#cPhoneArea").val("0910");
 			$("#cPhone").val("123456");
-			$("#cZipCode").val("110");
+			$("#hcZipCode").val("110");
+			$("#hcCity").val($("#cCity :selected").val());
+			$("#hcDist").val($("#cDistrict :selected").val());
 			$("#cAddress").val("測試路");
 		}
 		
@@ -336,7 +345,9 @@
 					$("#cTelExt").val($("#bTelExt").val());
 					$("#cPhoneArea").val($("#bPhoneArea").val());
 					$("#cPhone").val($("#bPhone").val());
-					$("#cZipCode").val($("#bZipCode").val());
+					$("#hcZipCode").val($("#hbZipCode").val());
+					$("#hcCity").val($("#hbCity").val());
+					$("#hcDist").val($("#hbDist").val());
 					$("#cAddress").val($("#bAddress").val());
 					$('.receiverBlock').css('display', 'none');
 				} else {
@@ -349,6 +360,8 @@
 
 		function validateForm() {
 			$('#orderForm').validate({
+				errorClass: "order-input-error",
+				// validClass: "order-input-valid",
 				rules: {
 					bName: {
 						required: true,
@@ -425,7 +438,7 @@
 						minlength:5
 					}
 				},
-				message: {
+				messages: {
 					bName: {
 						required: "請輸入姓名",
 						minlength: "姓名至少為2個字母組成"
