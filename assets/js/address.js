@@ -200,8 +200,8 @@ function showDistGroup(selectEle, cityName, thisDist) {
 }
 
 
-function changeZip(zipInputEle, distInputEle, distSelectElement) {
-	if (distSelectElement.value.substring(4) == "鄉鎮市區") {
+function changeZip(zipInputEle, distInputEle, distSelectElement, citySelectElement) {
+	if (distSelectElement.value.substring(4) == distGroup0[0].substring(4) || citySelectElement.value == cityGroup[0]) {
 		// 未選擇
 		distInputEle.value = "";
 		zipInputEle.value = "";
