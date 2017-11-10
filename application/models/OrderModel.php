@@ -52,17 +52,31 @@ class OrderModel extends CI_Model {
 
     function selOrder($orderId) {
         $this->db->where('id', $orderId);
-        log_message('info', '取得訂單, orderId:' . $orderId); // test log
+        log_message('info', '撈取訂單, orderId:' . $orderId); // test log
+        $order = $this->db->get('ct_order')->row_array();
         
-        return $this->db->get('ct_order')->row_array();
+        return (empty($order) ? array(): $this->selOrderDetail($order));
     }
 
 
     function selOrderDetail($order) {
         $this->db->where('order_id', $order['id']);
-        log_message('info', '取得訂單明細, orderId:' . $order['id']); // test log
+        log_message('info', '撈取訂單明細, orderId:' . $order['id']); // test log
         
-        return $this->db->get('ct_order_detail')->row_array();
+        $orderDetail = $this->db->get('ct_order_detail')->result_array();
+        $order['total'] = 0;
+        if (empty($orderDetail)) {
+            $order['orderDetail'] = array();
+            log_message('info', '查無訂單明細, orderId:' . $order['id']); // test log
+        } else {
+            $order['orderDetail'] = $orderDetail;
+            foreach ($orderDetail as $key => $value) {
+                $order['total'] = $order['total'] + $value['product_price'] * $value['product_qty'];
+            }
+            log_message('info', '已取得訂單明細, orderId:' . $order['id']); // test log
+        }
+        
+        return $order;
     }
 
 

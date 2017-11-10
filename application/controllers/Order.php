@@ -222,6 +222,8 @@ class Order extends CI_Controller {
             'view' => 'order/complete.php'
         );
 
+        $view_data['errorMsg'] = '';
+
         log_message('info', 'cordId: ' . $cordId); // test log
         if (strlen($cordId) < 10) {
             $view_data['view'] = 'order/fail.php';
@@ -232,15 +234,32 @@ class Order extends CI_Controller {
         }
         
         // 撈出訂單
-        $view_data['order'] = $this->OrderModel->selOrder($cordId);
+        $order = $this->OrderModel->selOrder($cordId);
 
-
-        $view_data['errorMsg'] = '有訂單';
-
-        $this->load->view("layout", $view_data);
-        $order = $this->OrderModel->selOrder((string) $cordId);
-        $orderDetail = $this->OrderModel->selOrderDetail($order);
+        if (empty($order)) {
+            $view_data['view'] = 'order/fail.php';
+            $view_data['errorMsg'] = '查無此訂單';
+             // 顯示頁面
+             $this->load->view("layout", $view_data);
+             return;
+        } else if (empty($order['orderDetail'])) {
+            $view_data['view'] = 'order/fail.php';
+            $view_data['errorMsg'] = '查無訂單明細';
+             // 顯示頁面
+             $this->load->view("layout", $view_data);
+             return;
+        } else if ($order['status'] != '1') {
+            $view_data['view'] = 'order/fail.php';
+            $view_data['errorMsg'] = '付款失敗';
+             // 顯示頁面
+             $this->load->view("layout", $view_data);
+             return;
+        }
         
+        $view_data['order'] = $order;
+        $view_data['shippingFee'] = ShopConstants::SHIPPING_FEE;
+      
+        $this->load->view("layout", $view_data);
     }
 
 
