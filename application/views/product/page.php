@@ -35,7 +35,47 @@
         <a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/checkout"><button class="btn btn-danger">商品結帳</button></a>
     </div>
     <hr>
+<!--
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="col-12">商品資訊</div>
+        </div>
+        <div class="panel-body">
+        <?php if (sizeof($cart) == 0) { ?>
+            <div class="col">
+                目前購物車尚無任何商品
+            </div>
+        <?php } else { ?>
+            <?php foreach ($cart as $key => $value):?>
+            <div class="form-group" id="<?=$value['rowid']; ?>">
+            	<div class="col-xs-3 col-sm-3 d-none d-sm-block">
+            		<img style="width:100px; height:100px;" src="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/<?=$value['options']['image']; ?>" class="#"
+            		alt="">
+            	</div>
+            	<div class="col-xs-6 col-sm-3">
+            		<?=$value['name']; ?>
+            	</div>
+            	<div class="col-xs-6 col-sm-2 col-md-2">
+            		<?=$value['qty']; ?>
+            	</div>
+            	<div class="col-xs-6 col-sm-2 col-md-2">
+            		<label>小計</label>
+            		$
+            		<?=$value['price']; ?>
+            	</div>
 
+            </div>
+
+            <?php endforeach; ?>
+
+        <?php } ?>
+        </div>
+        </div>
+    </div>
+
+    <hr>
+ -->   
+ 
     <div class="container cart">
         <div class="row">
             <div class="column">
@@ -76,7 +116,7 @@
                 		<?=$value['qty']; ?>
                 	</td>
                 	<td class="align-middle text-center"> $
-                		<?=$value['price']; ?>
+                		<?=$value['price']*$value['qty']; ?>
                 	</td>
                 </tr>
                 <?php endforeach; ?>
