@@ -40,6 +40,22 @@ class Welcome extends CI_Controller {
 
     }
 
+	public function testSendMail() {
+        $to = "markkao@ct.org.tw";
+        $subject = "My subject";
+        $txt = "Hello world!";
+        $headers = "From: testmybaby00@gmail.com";
 
+	    echo "mail ready send.";
+        if (mail($to,$subject,$txt,$headers)) {
+	        echo "mail send.";
+	    } else {
+	        echo "mail not send.";
+        }
+    }
+
+	function checkPhpInfo() {
+		echo phpinfo();
+	}
 
 }

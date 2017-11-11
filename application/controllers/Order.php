@@ -10,6 +10,7 @@ class Order extends CI_Controller {
         $this->load->model('OrderModel');
         $this->load->library('ShopConstants');
         include('application/libraries/ECPay.Payment.Integration.php');
+        // $this->load->library('email');
     }
 
     /**
@@ -183,7 +184,7 @@ class Order extends CI_Controller {
             if ($orderId == $response['MerchantTradeNo']) {
                  $check = true;
             } else {
-                log_message('info', '付款結果回傳的訂單編號不符, orderId: '. $orderId . ', response orderId: ' . $response['MerchantTradeNo']);
+                log_message('debug', '付款結果回傳的訂單編號不符, orderId: '. $orderId . ', response orderId: ' . $response['MerchantTradeNo']);
             }
 
             // 檢查是否付款成功
@@ -198,14 +199,20 @@ class Order extends CI_Controller {
                     
                     $updCount = $this->OrderModel->updOrder($orderId, $updDataArray);
                     if ($updCount > 0 ) {
+                        log_message('debug', '確認付款成功');
                         echo '1|OK';
                     } else {
                         // 付款失敗
+                        log_message('debug', '訂單更新失敗, payment fail.');
                         echo 'FAIL';
                     }
+                } else {
+                    log_message('debug', '訂單不存在, payment fail.');
+                    echo 'FAIL';
                 }
         	} else {
                 // orderId不匹配; or RtnCode != 1;
+                log_message('debug', '付款失敗');
                 echo 'FAIL';
         	}
 
@@ -255,13 +262,30 @@ class Order extends CI_Controller {
              $this->load->view("layout", $view_data);
              return;
         }
-        
+
+
         $view_data['order'] = $order;
         $view_data['shippingFee'] = ShopConstants::SHIPPING_FEE;
+
+        //TODO 寄出訂購成功信, 用try catch包住
+
+        //TODO 寄出廠商通知信, 用try catch包住
       
         $this->load->view("layout", $view_data);
     }
 
+    function test_sendCompleteMail() {   // test modify
+        $toMail = 'markkao@ct.org.tw';
+        if ($this->OrderModel->sendCompleteMail($toMail, $toMail, '')){
+            log_message("debug", "信件已寄出, 收件人: " . $toMail);
+            echo '寄信成功<br/>';
+            echo $this->email->print_debugger();
+        } else {
+            echo '寄信失敗<br/>';
+            echo $this->email->print_debugger();
+        }
+        
+    }
 
     function testgenNumber() {
         $nowTime = time();
@@ -282,7 +306,61 @@ class Order extends CI_Controller {
     function order_detail($orderId, $phone, $email) {    
     }
 
-    
-}
+    function testresult() {
+        $this->db->where('order_id', '5a0567613af5d');
+        $orderDetail = $this->db->get('ct_order_detail')->result_array();
+
+        foreach($orderDetail as $key => $value) {
+            echo $value['order_id'] . '/';
+            echo $value['product_name'] . '/';
+            echo $value['product_price'] . '/';
+            echo $value['product_qty'] . '/';
+            echo '<br/>';
+        }
+        echo '<br/> 假設: <br/>';
+        echo '$orderDetail[0][\'order_id\'] = ' . $orderDetail[0]['order_id'] . '<br/>';
+        echo '$orderDetail[0][\'product_name\'] = ' . $orderDetail[0]['product_name'] . '<br/>';
+        
+        echo '<br/><br/>';
+        // 看看陣列中的組成是甚麼
+        /* 以下這樣撈會出錯 */
+        foreach($orderDetail as $key => $value) {
+            echo  $key ;
+            echo '<br/>';
+            // echo $value;
+            // echo '<br/>';
+            foreach ($value as $inKey => $inValue) {
+                echo 'key: ' . $inKey . ', value: ' . $inValue . '<br/>';
+            }
+            echo '===========================<br/>';
+        }
+        /**
+         *  結論: 
+         * 當我在外迴圈取得的key是第一維陣列index, value表示各筆訂單明細資料的物件.
+         * 內迴圈取得的key是訂單明細資料的欄位, value 表示真正的明細內容.
+        */
+        echo '<hr><br/>';
+
+        $this->db->where('order_id', '5a0567613af5d');
+        $orderDetail1 = $this->db->get('ct_order_detail')->row_array();
+        echo $orderDetail1['order_id'] . '/';
+        echo $orderDetail1['product_name'] . '/';
+        echo $orderDetail1['product_price'] . '/';
+        echo $orderDetail1['product_qty'] . '/';
+        
+        echo '<br/><br/>';
+        // 看看陣列中的組成是甚麼
+        foreach($orderDetail1 as $key => $value) {
+            echo 'key: ' . $key . ', value: ' . $value . '<br/>';
+        }
+
+        /**
+         * 結論: 
+         * result_array() 會撈出一個二維陣列數組, 包含每筆資料.
+         * row_array() 會撈出一個一維數組, 包含一筆資料.
+         *
+        */
+    }
+ }
 
 ?>

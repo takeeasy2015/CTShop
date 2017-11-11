@@ -66,10 +66,13 @@ $route['payCallback/(:any)'] = 'Order/payCallback/$1';
 
 // trace
 $route['genNumber'] = 'Order/testgenNumber';
-
+$route['testresult'] = 'Order/testresult';
+$route['test_sendCompleteMail'] = 'Order/test_sendCompleteMail';
+$route['testSendMail'] = 'welcome/testSendMail';
 
 $route['hello'] = 'welcome/hello';
 $route['heyman'] = 'welcome/heyman';
+$route['checkPhpInfo'] = 'welcome/checkPhpInfo';
 
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';

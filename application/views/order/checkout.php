@@ -57,7 +57,7 @@
 						</td>
 						<td class="align-middle text-center"><?=$value['name']; ?></td>
 						<td class="align-middle text-center"><?=$value['qty']; ?></td>
-						<td class="align-middle text-center"> $<?=$value['price']; ?></td>
+						<td class="align-middle text-center"> $<?=$value['price']*$value['qty']; ?></td>
 					</tr>
 					<?php endforeach; ?>
 					<tr>
@@ -221,9 +221,10 @@
 			</div>
 			
 			<button type="submit" class="btn btn-primary mt-5">前往付款</button>
-			<a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a><!-- TODO 要再更換網址 -->
 			<input type="hidden" name="rule" value="ordersave">
 		</form> 
+		<a href="javascript:void(0)" onclick="window.history.go(-1);"><button class="btn btn-outline-secondary mt-5">回上一頁</button></a>
+		<!-- <a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a>TODO 要再更換網址 -->
 	</div>
 </div>
 
@@ -245,28 +246,6 @@
 			validateForm();
 			initLocationOption();
         });
-
-        // function removeCartItem() {
-        //     $(".btnOrderItemCartRemove").on('click', function(e) {
-        //         e.preventDefault();
-        //         var that = $(e.target);
-        //         var rowid = that.closest('td').find('input[name=rowid]').val();
-        //         console.log('remove rowid: ' + rowid);  // test log
-        //         var api = 'http://' + location.host + '/CTShop/api/removeCartItem';
-        //         console.log('remove api: ' + api); // test log
-
-        //         $.post(api, {
-        //             rowid: rowid
-        //         }, function(response) {
-        //             console.log('removeCartItem done, res: ' + response); // test log
-        //             window.alert(response.rtnMessage);
-        //             if (response.rtnCode == 200) {
-        //                 location.reload();
-        //             }
-        //         }, 'json');
-        //     });
-        // }
-
 
 		function removeCartItem() {
         	$(".btnOrderItemCartRemove").on('click', function (e) {
@@ -316,9 +295,6 @@
 			$("#bTelExt").val("101");
 			$("#bPhoneArea").val("0911");
 			$("#bPhone").val("123456");
-			$("#hbZipCode").val("110");
-			$("#hbCity").val($("#bCity :selected").val());
-			$("#hbDist").val($("#bDistrict :selected").val());
 			$("#bAddress").val("測試路50號");
 			
 
@@ -328,9 +304,6 @@
 			$("#cTelExt").val("");
 			$("#cPhoneArea").val("0910");
 			$("#cPhone").val("123456");
-			$("#hcZipCode").val("110");
-			$("#hcCity").val($("#cCity :selected").val());
-			$("#hcDist").val($("#cDistrict :selected").val());
 			$("#cAddress").val("測試路");
 		}
 		
@@ -345,12 +318,14 @@
 					$("#cPhoneArea").val($("#bPhoneArea").val());
 					$("#cPhone").val($("#bPhone").val());
 					$("#cZipCode").val($("#bZipCode").val());
+					$("input[name=cZip]").val($("input[name=bZip]").val());
 					$("#cCity").val($("#bCity").val());
-					$("#cDist").val($("#bDist").val());
+					$("input[name=cDist]").val($("input[name=bDist]").val());
 					$("#cAddress").val($("#bAddress").val());
 					$('.receiverBlock').css('display', 'none');
 				} else {
 					$('.receiverBlock').css('display', 'inline');
+					showDistGroup(cDistrict, cCity.value, $("#bDistrict").val());
 				}
 
 			});
@@ -406,27 +381,22 @@
 					bPhoneArea: {
 						required: true,
 						number: true,
-						minlength: 4,
-						maxlength: 4,
+						rangelength: [4, 4]
 					}, 
 					cPhoneArea: {
 						required: true,
 						number: true,
-						minlength: 4,
-						maxlength: 4
+						rangelength: [4, 4]
 					},
 					bPhone: {
 						required: true,
 						number: true,
-						minlength: 6,
-						maxlength: 10
-						
+						rangelength: [6, 10]
 					},
 					cPhone: {
 						required: true,
 						number: true,
-						minlength: 6,
-						maxlength: 10
+						rangelength: [6, 10]
 					},
 					bAddress: {
 						required: true,
@@ -435,6 +405,12 @@
 					cAddress: {
 						required: true,
 						minlength:5
+					},
+					bZipCode: {
+						required: true
+					},
+					cZipCode: {
+						required: true
 					}
 				},
 				messages: {
@@ -482,26 +458,22 @@
 					bPhoneArea: {
 						required: "請輸入手機前四碼",
 						number: "手機前四碼必須為數字",
-						minlength: "號碼至少為4碼", 
-						maxlength: "號碼至多為4碼"
+						rangelength: "號碼至少為4碼"
 					}, 
 					cPhoneArea: {
 						required: "請輸入手機前四碼",
 						number: "手機前四碼必須為數字",
-						minlength: "號碼至少為4碼", 
-						maxlength: "號碼至多為4碼"
+						rangelength: "號碼至少為4碼"
 					},
 					bPhone: {
 						required: "請輸入手機後六碼",
 						number: "手機後六碼必須為數字",
-						minlength: "號碼至少為6碼", 
-						maxlength: "號碼至少為6碼"
+						rangelength: "號碼至少為6碼"
 					},
 					cPhone: {
 						required: "請輸入手機後六碼",
 						number: "手機後六碼必須為數字",
-						minlength: "號碼至少為6碼", 
-						maxlength: "號碼至少為6碼"
+						rangelength: "號碼至少為6碼"
 					},
 					bAddress: {
 						required: "請輸入訂購人地址",
@@ -510,6 +482,12 @@
 					cAddress: {
 						required: "請輸入收件人地址",
 						minlength: "請輸入有效的地址"
+					},
+					bZipCode: {
+						required: "請選擇縣市與鄉鎮市區"
+					},
+					cZipCode: {
+						required: "請選擇縣市與鄉鎮市區"
 					}
 				}
 			})
@@ -526,26 +504,24 @@
 
 			$("#bCity").on('change', function () {
 				showDistGroup(bDistrict, bCity.value, '');
-				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict);
+				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict, bCity);
 				$("#bZipCode").val($('input[name=bZip]').val());
 			});
 
 			$("#bDistrict").on('change', function(){
-				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict);
+				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict, bCity);
 				$("#bZipCode").val($('input[name=bZip]').val());
 			});
 
 			$("#cCity").on('change', function () {
 				showDistGroup(cDistrict, cCity.value, '');
-				changeZip(document.orderForm.bZip, document.orderForm.bDist, bDistrict);
-				$("#bZipCode").val($('input[name=bZip]').val());
+				changeZip(document.orderForm.cZip, document.orderForm.cDist, cDistrict, cCity);
+				$("#cZipCode").val($('input[name=cZip]').val());
 			});
 
 			$("#cDistrict").on('change', function(){
-				changeZip(document.orderForm.cZip, document.orderForm.cDist, cDistrict);
+				changeZip(document.orderForm.cZip, document.orderForm.cDist, cDistrict, cCity);
 				$("#cZipCode").val($('input[name=cZip]').val());
-				
-
 			});
 		}
 

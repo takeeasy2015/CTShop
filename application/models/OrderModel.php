@@ -12,7 +12,7 @@ class OrderModel extends CI_Model {
         
         $this->db->trans_begin();
         
-        if ($this->insOrder($orderDataArray) < 0) {
+        if ($this->insOrder($orderDataArray) < 1) {
             log_message('info', '新增訂單失敗, orderid:' . $orderDataArray['id']);
             $this->db->trans_rollback();
             return false;
@@ -20,7 +20,7 @@ class OrderModel extends CI_Model {
         
         log_message('info', '準備新增orderdetail, orderid:' . $orderDataArray['id']);
         
-        if ($this->insOrderDetail($orderDetailArray) < 0) {
+        if ($this->insOrderDetail($orderDetailArray) < 1) {
             log_message('info', '新增訂單明細失敗, orderid:' . $orderDetailArray['order_id']['id']);
             $this->db->trans_rollback();
             return false;
@@ -42,11 +42,9 @@ class OrderModel extends CI_Model {
     function selUserOrder($orderId, $buyerPhone) {
         $conditions = "id='$orderId' AND buyer_phone='$buyerPhone'";
         $this->db->where($conditions);
-        $order = $this->db->get('ct_order')->result_array();
-        foreach ($order as $key => $value) {
-            $order[$key] = $this->selOrderDetail($value);
-        }
-        return $order;
+        $order = $this->db->get('ct_order')->row_array();
+
+        return (empty($order) ? array(): $this->selOrderDetail($order));
     }
 
 
@@ -97,6 +95,7 @@ class OrderModel extends CI_Model {
         return $affectedRows;
     }
 
+
     function updOrder($orderId, $dataArray) {
         $this->db->where('id', $orderId);
         log_message('info', '更新訂單, orderId:' . $orderId); // test log
@@ -110,24 +109,69 @@ class OrderModel extends CI_Model {
     function deleteOrder($orderId) {
         $this->db->where('id', $orderId);
         log_message('info', '刪除訂單, orderId:' . $orderId); // test log
-        return $this->db->delete('ct_order');
+        $this->db->delete('ct_order');
+        $affectedRows = $this->db->affected_rows();
+        return $affectedRows;
     }
 
 
     function checkOrderExist($orderId, $orderStatus) {
+        $conditions = "";
         if (strtoupper($orderStatus) == "ALL") {
-            $this->db->where('id', $orderId);
-            log_message('info', '檢查訂單, orderId:' . $orderId);  // test log
+            $conditions = "id='$orderId'";
+            log_message('debug', '檢查訂單, orderId:' . $orderId);  // test log
         } else {
             $conditions = "id='$orderId' AND status='$orderStatus'";
-            $this->db->where($conditions);
-            log_message('info', '檢查特定狀態訂單, orderId:' . $orderId); 
+            log_message('debug', '檢查特定狀態訂單, orderId:' . $orderId . ", status: " . $orderStatus); 
         }
 
-        $order = $this->db->get('ct_order')->result_array();
-        log_message('info', 'order content: ' . $order . ', sizeOf: ' . sizeof($order));  // test log
+        $this->db->where($conditions);
+        $order = $this->db->get('ct_order')->row_array();
+        log_message('debug', '訂單查詢結果,orderId: ' . $orderId . ', order is empty: ' . empty($order));
 
-        return (sizeof($order) > 0 ? true : false);
+        return (empty($order) ? false : true);
+    }
+
+    // 寄信
+    function sendCompleteMail($toMail, $ccMail, $bccMail) {
+        if ($toMail == '') { 
+            log_message("debug", "無效寄信, toMail target is empty");
+            return false;
+        } else {
+            $this->email->from('testmybaby00@gmail.com', 'Service');
+            $this->email->to($toMail);
+            if ($ccMail != '') {
+                $this->email->cc($ccMail);
+            }
+            if ($bccMail != '') {
+                $this->email->bcc($bccMail);
+            }
+            $this->email->subject('訂購完成');
+            $this->email->message('恭喜您完成訂購');
+            $this->email->set_alt_message("沒有HTML格式的信件內文");
+            return $this->email->send();
+        }
+
+    }
+
+
+    function mailContent() {
+        $completeOrderMsg = '<p>感謝您的訂購</p>';
+        
+        
+        $mailMsg = '';
+        $html .= ' <!DOCTYPE html> <html lang="en"> ';
+        $head .= '<head>';
+        $headEnd .= '</head>';
+        $body .= '<body>';
+        $bodyEnd .= '</body></html>';
+
+        $mailMsg .= $html . $head;
+        $mailMsg .= $headEnd;
+        $mailMsg .= $body;
+        $mailMsg .= $completeOrderMsg;
+        $mailMsg .= $bodyEnd;
+        
     }
 }
 
