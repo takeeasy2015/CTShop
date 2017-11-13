@@ -97,18 +97,13 @@ class Order extends CI_Controller {
                 'receiver_addr' => $cDist . $cAddress,
                 'total_price' => $this->getOrderPriceTotal(),
                 'payment' => ShopConstants::OTHER_PAYMENT,
-                'id' => uniqid(),
                 'create_date' => date('Y-m-d'),
                 'create_time' => date('H:i:s'),
             );
 
-            $orderDataArray['id_uni'] = sha1($orderDataArray['id']);
-
 
             // 訂單明細
             foreach($cart as $key => $value) {
-                $orderDetailArray[$key]['id'] = uniqid();
-                $orderDetailArray[$key]['order_id'] = $orderDataArray['id'];
                 $orderDetailArray[$key]['product_num'] = $value['id'];
                 $orderDetailArray[$key]['product_name'] = $value['name'];
                 $orderDetailArray[$key]['product_price'] = $value['price'];
@@ -118,18 +113,22 @@ class Order extends CI_Controller {
 
             try {
                 // 建立訂單
-                $this->OrderModel->createOrder($orderDataArray, $orderDetailArray);
+                $thisOrderId = $this->OrderModel->createOrder($orderDataArray, $orderDetailArray);
+
+                if ( $thisOrderId == "") {
+                    log_message("debug", "訂單成立失敗");  // test log
+                    throw new IllegalArgumentException("訂單成立失敗");
+                }
 
                 $obj = new ECPay_AllInOne();
-                
                 $obj->ServiceURL = ShopConstants::SERVICEURL_TEST;
                 $obj->HashKey = ShopConstants::HASHKEY_TEST;
                 $obj->HashIV = ShopConstants::HASHIV_TEST;
                 $obj->MerchantID = ShopConstants::MERCHANTID_TEST;
 
-                $obj->Send['ReturnURL'] =  base_url("payCallback/" . $orderDataArray['id']);
-                $obj->Send['OrderResultURL'] = base_url("orderComplete/" . $orderDataArray['id']);
-                $obj->Send['MerchantTradeNo'] = $orderDataArray['id'];
+                $obj->Send['ReturnURL'] =  base_url("payCallback/" . $thisOrderId);
+                $obj->Send['OrderResultURL'] = base_url("orderComplete/" . $thisOrderId);
+                $obj->Send['MerchantTradeNo'] = $thisOrderId;
                 $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');
                 $obj->Send['TotalAmount'] = $this->getOrderPriceTotal();  // TODO 這裡要檢查會不會有0元的問題
                 $obj->Send['TradeDesc'] = '購買商品';
@@ -145,7 +144,7 @@ class Order extends CI_Controller {
                         'Price' => $value['product_price'],
                         'Currency' => '元',
                         'Quantity' => $value['product_qty'],
-                        'URL' => base_url("orderComplete/" . $orderDataArray['id'])
+                        'URL' => base_url("orderComplete/" . $thisOrderId)
                     ));
                 }
 
@@ -153,7 +152,8 @@ class Order extends CI_Controller {
                 $this->cart->destroy();
 
                 $obj->CheckOut();
-
+            } catch (IllegalArgumentException $e) {
+                $view_data['errorMsg'] = $e->getMessage();
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -288,12 +288,17 @@ class Order extends CI_Controller {
     }
 
     function testgenNumber() {
-        $nowTime = time();
-        $fdate = date("ymdHi",time());
-        $squence = 1;
-        $number = 'p' . $fdate . '000' .$squence;
+        // $nowTime = time();
+        // $fdate = date("ymdHi",time());
+        // $squence = 1;
+        // $number = 'p' . $fdate . '000' .$squence;
 
-        echo $number;
+        $codeDate = date('Ymd');
+        $codeTime = date('Hi');
+        echo $this->OrderModel->genThisOrderId($codeDate, $codeTime);
+        
+
+
 
     }
 

@@ -20,6 +20,12 @@ class ShopConstants {
     const ORDERSTATUS_COMPLETED = '4';
     const ORDERSTATUS_ALL = 'ALL';
 
+    /**
+     *   order id rule
+     */
+    const ORDERIDRULE_TYPE = 'O';
+    const ORDERIDRULE_HEADER = 's';
+
 
     /**
      * ECpay
