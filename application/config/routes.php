@@ -56,8 +56,10 @@ $route['product/(:any)'] = 'Product/getProduct/$1';
 
 // cart
 $route['checkout'] = 'Order/checkout';
+$route['singleCheckout'] = 'Order/singleCheckout';
 $route['api/addToCart'] = 'Api/CartApi/addToCart';
 $route['api/removeCartItem'] = 'Api/CartApi/removeCartItem';
+$route['api/removeCartAllItem'] = 'Api/CartApi/removeCartAllItem';
 
 // order
 $route['orderSave'] = 'Order/saveOrder';
