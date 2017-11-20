@@ -14,6 +14,7 @@
     <div class="row justify-content-center mt-5">
          <div class="col-md-8">
          <h4 class="text-center mb-3 text-secondary">訂單資訊</h4>
+		 <h5 class="text-center mb-3 text-secondary"><?=$order['id'];?></h5>
          <table class="table table-sm">
             <thead>
             	<tr>

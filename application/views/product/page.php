@@ -31,8 +31,9 @@
                 </select>
             </li>
         </ul>
-        <button class="btnAddToCart btn btn-primary">加入購物車</button>
-        <a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/checkout"><button class="btn btn-danger">商品結帳</button></a>
+        <button class="btnAddToCart btn btn-primary" style="display:none;">加入購物車</button>
+        <a href="<?=base_url('checkout')?>"><button class="btn btn-danger" style="display:none;">購物車結帳</button></a>
+        <button class="btnSingleCheckout btn btn-danger">商品購買</button>
     </div>
     <hr>
 <!--
@@ -124,7 +125,7 @@
                 	<td colspan="4" class="align-middle text-center">合計</td>
                 	<td class="align-middle text-center productTotal">
                 		<strong>
-                			<?php echo '$' . $this->cart->total(); ?>
+                			<?php echo '$' . $cartTotal ?>
                 		</strong>
                 	</td>
                 </tr>
@@ -143,6 +144,7 @@
         $(document).ready(function() {
             addToCart();
             removeCartItem();
+            //singleCheckout();
         });
         
         
@@ -166,6 +168,30 @@
                     window.alert(response.rtnMessage);
                     if (response.rtnCode == 200) {
                         location.reload();
+                    }
+                }, 'json');
+            });
+
+            
+            $('.btnSingleCheckout').on('click', function(e) {
+                e.preventDefault();  // 先放預設清除
+                var that = $(e.target);
+                var num = that.closest('.productInfo').find('input[name=productNum]').val();
+                var qty = that.closest('.productInfo').find('select[name=needQty]').val();
+
+                console.log('num: ' + num + ', qty: ' + qty); // test log
+                console.log(location.host); // test log
+                var api = 'http://' + location.host + '/CTShop/api/addToCart';
+
+                console.log('api:' + api);
+
+                $.post(api, {
+                    num: num,
+                    qty: qty
+                }, function(response) {
+                    console.log('addToCart done: ' + response); // test log
+                    if (response.rtnCode == 200) {
+                        window.location.href = '<?=base_url('checkout');?>';
                     }
                 }, 'json');
             });
@@ -208,4 +234,13 @@
         	});
         }
 
+        // function singleCheckout() {
+        //     $(".btnSingleCheckout").on('click', function (e) {
+        //         e.preventDefault();
+        // 		var that = $(e.target);
+        //         var productNum = $('input[name=productNum]').val();
+        //         var needQty = $('select[name=needQty]').val();
+        //         window.location.href = "<?=base_url('singleCheckout');?>" + "?num=" + productNum + "&qty=" + needQty;
+        //     });
+        // }
     </script>

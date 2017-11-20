@@ -80,6 +80,13 @@ class CartApi extends CI_Controller {
         echo json_encode($dataResponse);
      }
 
+     function removeCartAllItem() {
+        $this->cart->destroy();
+        $dataResponse['rtnCode'] = 200;
+        $dataResponse['rtnMessage'] = '購物車已清空';
+        echo json_encode($dataResponse);
+     }
+
 
      function checkCart() {  // test function
         $view_data['cart'] = $this->cart->contents(true);

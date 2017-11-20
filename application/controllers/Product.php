@@ -12,8 +12,7 @@ class Product extends CI_Controller
         // $this->load->model('CatrgoryModel');
     }
 
-    function index()
-    {
+    function index() {
         // 頁面資訊
         $view_data = array(
             'title'=> "CTShop",
@@ -35,8 +34,7 @@ class Product extends CI_Controller
      * Product
      */
 
-    function getProduct($productNum)
-    {
+    function getProduct($productNum) {
         $view_data = array(
             'title'=> "CTShop - Product",
             'view'=> 'product/page.php',
@@ -59,9 +57,9 @@ class Product extends CI_Controller
                 log_message('debug', $value['subtotal']);
             }
         }
+        $view_data['cartTotal'] =  $this->cart->total();
 
         $view_data['product'] = $this->ProductModel->selProduct($productNum);
-
         if ($view_data['product'] == null) {
             log_message('debug', 'product ' . $productNum . ' is empty.');   // test log
         } else {
@@ -72,8 +70,7 @@ class Product extends CI_Controller
     }
 
 
-    function insertProduct()
-    {
+    function insertProduct() {
     }
 
 
@@ -81,7 +78,6 @@ class Product extends CI_Controller
      * Cart
      */
     
-    function addToCart()
-    {
+    function addToCart() {
     }
 }

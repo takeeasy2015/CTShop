@@ -206,7 +206,7 @@ class OrderModel extends CI_Model {
 
 
     // 寄信
-    function sendCompleteMail($toMail, $ccMail, $bccMail) {
+    function sendCompleteMail($toMail, $ccMail, $bccMail, $order) {
         if ($toMail == '') { 
             log_message("debug", "無效寄信, toMail target is empty");
             return false;
@@ -220,7 +220,7 @@ class OrderModel extends CI_Model {
                 $this->email->bcc($bccMail);
             }
             $this->email->subject('訂購完成');
-            $this->email->message('恭喜您完成訂購');
+            $this->email->message('恭喜您完成訂購, 您的訂單編號:' .  $order['id']);
             $this->email->set_alt_message("沒有HTML格式的信件內文");
             return $this->email->send();
         }

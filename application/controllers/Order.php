@@ -26,12 +26,48 @@ class Order extends CI_Controller {
         // 取得購物車
         $view_data['cart'] = $this->cart->contents(true);
         $view_data['shippingFee'] = ShopConstants::SHIPPING_FEE;
-
-
+        $view_data['cartTotal'] = $this->cart->total();
 
         // 顯示頁面
         $this->load->view("layout", $view_data);
     }
+
+    function singleCheckout() {
+        $view_data = array(
+            'title' => 'CTShop - singleCheckout',
+            'view' => 'order/checkout.php'
+        );
+
+
+        $data = array(
+            'num' => $this->input->get('num'),
+            'qty' =>  $this->input->get('qty')
+        );
+        // 呼叫API 加入購物車
+        $url = base_url('api/addToCart');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($curl);
+        curl_close($curl);
+        
+        $response = array();
+        if (empty($result)) {
+            log_message("debug", "未加入購物車");
+        } else {
+            $response = json_decode($result, true);  // 讀取json字串, 並轉換成陣列
+            if ($response['rtnCode'] == "200") {
+                log_message("debug", $response['rtnMessage']);
+            } else {
+                log_message("debug", $response['rtnMessage']);
+            }
+        }
+
+        header("Location: ".base_url('checkout'));
+    }
+
+
 
         
     function saveOrder() {
@@ -268,15 +304,26 @@ class Order extends CI_Controller {
         $view_data['shippingFee'] = ShopConstants::SHIPPING_FEE;
 
         //TODO 寄出訂購成功信, 用try catch包住
+        try {
+            $ccMail = 'markkao@ct.org.tw';
+            if ($this->OrderModel->sendCompleteMail($order['buyer_email'], $ccMail, '', $order)) {
+                log_message("debug", "信件已寄出, 收件人: " . $order['buyer_email']);
+            } else {
+                log_message("debug", "信件寄出失敗, debugger: " . $this->email->print_debugger());
+            }
+        } catch(Exception $e) {
+            log_message("debug", "信件寄出失敗, error: " . $e->getMessage());
+        }
 
         //TODO 寄出廠商通知信, 用try catch包住
       
+
         $this->load->view("layout", $view_data);
     }
 
     function test_sendCompleteMail() {   // test modify
         $toMail = 'markkao@ct.org.tw';
-        if ($this->OrderModel->sendCompleteMail($toMail, $toMail, '')){
+        if ($this->OrderModel->sendCompleteMail($toMail, $toMail, '', $order)){
             log_message("debug", "信件已寄出, 收件人: " . $toMail);
             echo '寄信成功<br/>';
             echo $this->email->print_debugger();

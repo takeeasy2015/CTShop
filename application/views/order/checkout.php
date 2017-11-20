@@ -68,7 +68,7 @@
 					<tr>
 						<td colspan="4" class="align-middle text-center">合計</td>
 						<td class="align-middle text-center cartTotal">
-							<strong><?php echo '$' . ($this->cart->total() + $shippingFee); ?></strong>
+							<strong><?php echo '$' . ($cartTotal + $shippingFee); ?></strong>
 						</td>
 					</tr>
 				<?php } ?>
@@ -224,6 +224,7 @@
 			<input type="hidden" name="rule" value="ordersave">
 		</form> 
 		<a href="javascript:void(0)" onclick="window.history.go(-1);"><button class="btn btn-outline-secondary mt-5">回上一頁</button></a>
+		<button type="button" class="btnCancel btn btn-outline-secondary mt-5">取消</button>
 		<!-- <a href="//<?=$_SERVER['HTTP_HOST']; ?>/CTShop/product/1"><button class="btn btn-outline-secondary mt-5">取消</button></a>TODO 要再更換網址 -->
 	</div>
 </div>
@@ -283,13 +284,26 @@
         			}
         		});
         	});
+
+			$('.btnCancel').on('click', function(e) {
+				e.preventDefault();
+        		var that = $(e.target);
+				var api = 'http://' + location.host + '/CTShop/api/removeCartAllItem';
+
+				$.post(api, function(response) {
+                    console.log('removeCartAllItem done: ' + response); // test log
+                    if (response.rtnCode == 200) {
+                        window.location.href = '<?=base_url('product/1');?>';
+                    }
+                }, 'json');
+			});
         }
 
 
 		function testInfo() {  // test modify
 			$("#bName").val("阿巴");
 			$("#bIdNumber").val("A123456789");
-			$("#bEmail").val("abc@cc.oo");
+			//$("#bEmail").val("abc@cc.oo");
 			$("#bTelArea").val("02");
 			$("#bTel").val("1234567");
 			$("#bTelExt").val("101");
