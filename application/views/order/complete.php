@@ -35,6 +35,8 @@
             	<tr id="<?=$value['id']; ?>">
             		<td class="align-middle text-center">
             		</td>
+					<td class="align-middle text-center">
+            		</td>
             		<td class="align-middle text-center">
             			<?=$value['product_name']; ?>
             		</td>

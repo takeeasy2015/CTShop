@@ -30,10 +30,17 @@
                     <option value="3">3</opiton>
                 </select>
             </li>
+            <?php if ($product['safety_stock'] <= 5 && $product['safety_stock'] > 0): ?>
+                <li>庫存小於5</li> 
+            <?php endif; ?>
         </ul>
-        <button class="btnAddToCart btn btn-primary" style="display:none;">加入購物車</button>
-        <a href="<?=base_url('checkout')?>"><button class="btn btn-danger" style="display:none;">購物車結帳</button></a>
-        <button class="btnSingleCheckout btn btn-danger">商品購買</button>
+        <?php if ($product['safety_stock'] > 0) : ?>
+            <button class="btnAddToCart btn btn-primary" style="display:none;">加入購物車</button>
+            <a href="<?=base_url('checkout')?>"><button class="btn btn-danger" style="display:none;">購物車結帳</button></a>
+            <button class="btnSingleCheckout btn btn-danger">商品購買</button>
+        <?php else: ?>
+        <button class="btnSingleCheckout btn btn-secondary">已無庫存</button>
+        <?php endif; ?>
     </div>
     <hr>
 <!--

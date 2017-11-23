@@ -24,7 +24,8 @@ class Order extends CI_Controller {
         );
 
         // 取得購物車
-        $view_data['cart'] = $this->cart->contents(true);
+        $thatCart = $this->cart->contents(true);
+        $view_data['cart'] = $thatCart;
         $view_data['shippingFee'] = ShopConstants::SHIPPING_FEE;
         $view_data['cartTotal'] = $this->cart->total();
 
@@ -66,9 +67,6 @@ class Order extends CI_Controller {
 
         header("Location: ".base_url('checkout'));
     }
-
-
-
         
     function saveOrder() {
         $view_data = array(
@@ -216,41 +214,32 @@ class Order extends CI_Controller {
             
             log_message('info', 'to CheckOutFeedback'); // test log
 
-            $check = false;
-            if ($orderId == $response['MerchantTradeNo']) {
-                 $check = true;
-            } else {
+            if ($orderId != $response['MerchantTradeNo']) {
                 log_message('debug', '付款結果回傳的訂單編號不符, orderId: '. $orderId . ', response orderId: ' . $response['MerchantTradeNo']);
-            }
-
-            // 檢查是否付款成功
-        	if ($check && $response['RtnCode'] == '1') {
-                // 檢查未付款的訂單是否存在
-                if ($this->OrderModel->checkOrderExist($orderId, ShopConstants::ORDERSTATUS_UNPAID)) { 
-                    $updDataArray = array(
-                        'status' => ShopConstants::ORDERSTATUS_PAID,
-                        'update_date' => date('Y-m-d'),
-                        'update_time' => date('H:i:s'),
-                    );
-                    
-                    $updCount = $this->OrderModel->updOrder($orderId, $updDataArray);
-                    if ($updCount > 0 ) {
-                        log_message('debug', '確認付款成功');
-                        echo '1|OK';
-                    } else {
-                        // 付款失敗
-                        log_message('debug', '訂單更新失敗, payment fail.');
-                        echo 'FAIL';
-                    }
-                } else {
-                    log_message('debug', '訂單不存在, payment fail.');
-                    echo 'FAIL';
-                }
-        	} else {
-                // orderId不匹配; or RtnCode != 1;
+                echo 'FAIL';
+            } else if ($response['RtnCode'] != '1') {
                 log_message('debug', '付款失敗');
                 echo 'FAIL';
-        	}
+            } else if (!$this->OrderModel->checkOrderExist($orderId, ShopConstants::ORDERSTATUS_UNPAID)) {
+                log_message('debug', '訂單不存在, payment fail.');
+                echo 'FAIL';
+            } else {
+                //TODO 這裡要修改
+                $updDataArray = array(
+                    'status' => ShopConstants::ORDERSTATUS_PAID,
+                    'update_date' => date('Y-m-d'),
+                    'update_time' => date('H:i:s')
+                );
+                
+                if ($this->OrderModel->completeForPayOrder($orderId, $updDataArray)) {
+                    log_message('debug', '確認付款成功');
+                    echo '1|OK';
+                } else {
+                    // 付款失敗
+                    log_message('debug', '訂單更新失敗, payment fail.');
+                    echo 'FAIL';
+                }
+            }
 
         } catch (Exception $e) {
             echo $e->getMessage();

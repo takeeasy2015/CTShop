@@ -5,6 +5,7 @@ class OrderModel extends CI_Model {
     public function __construct() {
         parent::__construct();
 
+        $this->load->model('OrderStockModel');
         
     }
 
@@ -51,6 +52,20 @@ class OrderModel extends CI_Model {
             $this->db->trans_rollback();
             return "";
         }
+
+        // 扣安全庫存
+        foreach ($orderDetailArray as $key => $value) {
+            $productNum = $orderDetailArray[$key]['product_num'];
+            $productQty = (-$orderDetailArray[$key]['product_qty']); // 扣安全庫存塞負的
+            if ($this->OrderStockModel->updSafetyStock($productNum, $productQty) < 1) {
+                log_message('debug', '扣安全庫存失敗, productNum: '.$productNum.', qty: '.$productQty);
+                $this->db->trans_rollback();
+                return;
+            }
+        }
+        
+        log_message("debug", "跑完成立訂單全程了, transStatus: ".$this->db->trans_status());  // test log
+
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -162,7 +177,6 @@ class OrderModel extends CI_Model {
     function genThisOrderId($codeDate, $codeTime) {
         $newOrderId = "";
         
-        // $this->db->trans_begin();
         $sql = 
         " INSERT INTO ct_order_autoencode (code_type, code_head, code_date, code_time, code_count) " . 
         " VALUES (
@@ -192,16 +206,69 @@ class OrderModel extends CI_Model {
             }
         }
 
-        // if ($this->db->trans_status() === FALSE) {
-        //     $this->db->trans_rollback();
-        //     log_message('info', '產生訂單編號rollback, newOrderId: ' . $newOrderId);
-        //     return false;
-        // } else {
-        //     $this->db->trans_commit();
-        //     log_message('info', '產生訂單編號commit, newOrderId: ' . $newOrderId);
-        // }
-
         return $newOrderId;
+    }
+
+    // 完成通過付款的訂單
+    function completeForPayOrder($orderId, $updDataArray) {
+        $hasComplete = false;
+
+        $this->db->trans_begin();
+
+        if (empty($orderId)) {
+            log_message("debug", "error: 沒有訂單編號");
+            $this->db->trans_rollback();
+            return $hasComplete;
+        }
+
+        $updCount = $this->updOrder($orderId, $updDataArray);
+        if ($updCount > 0 ) {
+            log_message('debug', '更新訂單狀態, orderId: '. $orderId);
+            $order = $this->selOrder($orderId);
+            if (empty($order)) {
+                log_message("debug", "error: 找不到訂單");
+                $this->db->trans_rollback();
+                return $hasComplete;
+            }
+
+            $orderDetail = $order['orderDetail'];
+            if (empty($orderDetail)) {
+                log_message("debug", "error: 找不到訂單明細");
+                $this->db->trans_rollback();
+                return $hasComplete;
+            }
+
+            // 扣安全庫存
+            foreach ($orderDetail as $key => $value) {
+                $productNum = $orderDetail[$key]['product_num'];
+                $productQty = (-$orderDetail[$key]['product_qty']); // 扣安全庫存塞負的
+                if ($this->OrderStockModel->updStock($productNum, $productQty) < 1) {
+                    log_message('debug', '扣庫存失敗, productNum: '.$productNum.', qty: '.$productQty);
+                    $this->db->trans_rollback();
+                    return $hasComplete;
+                }
+            }
+
+            $hasComplete = true;
+            log_message("debug", "跑完completeOrder全程了, transStatus: ".$this->db->trans_status());  // test log
+
+        } else {
+            log_message('debug', '訂單更新失敗, payment fail.');  // test log
+            $this->db->trans_rollback();
+            return $hasComplete;
+        }
+        
+
+        if ($this->db->trans_status() === FALSE) {
+            $hasComplete = false;
+            $this->db->trans_rollback();
+            log_message('info', '訂單rollback, orderid:' . $orderId);
+        } else {
+            $this->db->trans_commit();
+            log_message('info', '訂單commit, orderid:' . $orderId);
+        }
+
+        return  $hasComplete;
     }
 
 
